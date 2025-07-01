@@ -1,0 +1,59 @@
+# 开发相关
+.vscode/
+.idea/
+*.log
+*.tsbuildinfo
+
+# 测试相关
+test/
+tests/
+__tests__/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+vitest.config.*
+jest.config.*
+
+# 构建相关
+scripts/
+internal/
+play/
+docs/
+.github/
+.circleci/
+.husky/
+
+# 开发工具配置
+.eslintrc.*
+.prettierrc.*
+.editorconfig
+.gitignore
+.gitattributes
+.markdownlint.json
+commitlint.config.*
+tsconfig.*.json
+
+# 依赖和锁文件
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# 其他
+*.md
+!README.md
+CHANGELOG.*
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+LICENSE
+
+# 源码（只发布构建后的文件）
+packages/*/src/
+packages/*/index.ts
+packages/*/index.js
+
+# 开发环境文件
+.env*
+.nvmrc
+.gitpod.yml 
