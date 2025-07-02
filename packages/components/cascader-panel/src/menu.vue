@@ -24,11 +24,13 @@
       inner-element="div" role="listbox" :aria-label="t('el.cascader.options')" @error="handleVirtualListError">
       <template #default="{ data, index, style }">
         <el-cascader-node :key="data[index].uid" :node="data[index]" :menu-id="menuId" :style="style"
-          @expand="handleExpand" />
+          @expand="handleExpand" @check="handleNodeCheck" :checked="isNodeChecked(data[index].uid)"
+          :onVnodeMounted="() => logRenderNode(data[index].uid)" />
       </template>
     </FixedSizeList>
     <template v-else>
-      <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand" />
+      <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"
+        :onVnodeMounted="() => logRenderNode(node.uid)" />
     </template>
     <div v-if="isLoading" :class="ns.e('empty-text')">
       <el-icon size="14" :class="ns.is('loading')">
@@ -45,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, inject, ref, onBeforeUnmount } from 'vue'
+import { computed, defineComponent, getCurrentInstance, inject, ref, onBeforeUnmount, watch } from 'vue'
 import ElScrollbar from '@element-plus/components/scrollbar'
 import { useId, useLocale, useNamespace } from '@element-plus/hooks'
 import { Loading } from '@element-plus/icons-vue'
@@ -81,9 +83,13 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    modelValue: {
+      type: Object as PropType<{ allSelected: boolean; exceptions: string[] }>,
+      default: () => ({ allSelected: false, exceptions: [] }),
+    },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const instance = getCurrentInstance()!
     const ns = useNamespace('cascader-menu')
 
@@ -145,6 +151,72 @@ export default defineComponent({
       selectableNodes.value.length === 0
     )
 
+    // 新增全选标记和例外集合
+    const isAllSelectedFlag = ref(false)
+    const checkedExceptions = ref(new Set<string>())
+
+    // 判断节点是否选中
+    function isNodeChecked(nodeUid: string) {
+      if (isAllSelectedFlag.value) {
+        return !checkedExceptions.value.has(nodeUid)
+      } else {
+        return checkedExceptions.value.has(nodeUid)
+      }
+    }
+
+    // 全选/取消全选
+    function handleSelectAll(checked: boolean) {
+      const t0 = performance.now()
+      isAllSelectedFlag.value = checked
+      checkedExceptions.value.clear()
+      emitSelected()
+      const t1 = performance.now()
+      console.log(`[Cascader] handleSelectAll(${checked}) 耗时: ${(t1 - t0).toFixed(2)}ms`)
+    }
+
+    // 单个节点选中/取消
+    function handleNodeCheck(nodeUid: string, checked: boolean) {
+      const t0 = performance.now()
+      if (isAllSelectedFlag.value) {
+        if (!checked) checkedExceptions.value.add(nodeUid)
+        else checkedExceptions.value.delete(nodeUid)
+      } else {
+        if (checked) checkedExceptions.value.add(nodeUid)
+        else checkedExceptions.value.delete(nodeUid)
+      }
+      emitSelected()
+      const t1 = performance.now()
+      console.log(`[Cascader] handleNodeCheck(${nodeUid}, ${checked}) 耗时: ${(t1 - t0).toFixed(2)}ms`)
+    }
+
+    // 获取所有选中节点的值
+    function getSelectedNodeValues() {
+      const t0 = performance.now()
+      const result: (string | number)[] = []
+      const collect = (nodes: CascaderNode[]) => {
+        nodes.forEach(node => {
+          if (!node.isDisabled && isNodeChecked(node.uid.toString())) {
+            result.push(node.value)
+          }
+          if (node.children) collect(node.children)
+        })
+      }
+      collect(props.nodes)
+      const t1 = performance.now()
+      console.log(`[Cascader] getSelectedNodeValues 耗时: ${(t1 - t0).toFixed(2)}ms, 选中节点数: ${result.length}`)
+      return result
+    }
+
+    // 只 emit 一次事件，避免父组件频繁响应
+    function emitSelected() {
+      if (instance && instance.emit) {
+        instance.emit('update:modelValue', {
+          allSelected: isAllSelectedFlag.value,
+          exceptions: Array.from(checkedExceptions.value)
+        })
+      }
+    }
+
     // 更新全选缓存
     const updateSelectAllCache = () => {
       const now = Date.now()
@@ -184,7 +256,7 @@ export default defineComponent({
       cache.checkedCount = checkedCount
     }
 
-    // 批量处理全选/取消全选
+    // 批量处理全选/取消全选，分批处理，batchSize=200，且只emit一次事件
     const batchSelectAll = async (checked: boolean) => {
       if (isAllDisabled.value || isSelectAllProcessing.value) return
 
@@ -197,50 +269,32 @@ export default defineComponent({
       // 设置防抖，避免快速重复点击
       selectAllDebounceTimer.value = window.setTimeout(async () => {
         isSelectAllProcessing.value = true
-
         try {
           const startTime = performance.now()
-
-          // 更新缓存
           updateSelectAllCache()
-
           const nodesToProcess = selectableNodes.value
-
           if (nodesToProcess.length === 0) return
-
-          // 对于大量数据，使用分批处理避免阻塞UI
-          if (nodesToProcess.length > 1000) {
-            const batchSize = 500 // 每批处理500个节点
-            const totalBatches = Math.ceil(nodesToProcess.length / batchSize)
-
-            for (let i = 0; i < totalBatches; i++) {
-              const start = i * batchSize
-              const end = Math.min(start + batchSize, nodesToProcess.length)
-              const batch = nodesToProcess.slice(start, end)
-
-              // 使用批量处理方法
-              panel.batchCheckChange(batch, checked, false)
-
-              // 如果不是最后一批，等待下一帧
-              if (i < totalBatches - 1) {
-                await new Promise(resolve => requestAnimationFrame(resolve))
-              }
+          // 分批处理，batchSize=200
+          const batchSize = 200
+          const totalBatches = Math.ceil(nodesToProcess.length / batchSize)
+          for (let i = 0; i < totalBatches; i++) {
+            const start = i * batchSize
+            const end = Math.min(start + batchSize, nodesToProcess.length)
+            const batch = nodesToProcess.slice(start, end)
+            // 只在最后一批 emit 事件，避免父组件频繁响应
+            panel.batchCheckChange(batch, checked, i === totalBatches - 1)
+            if (i < totalBatches - 1) {
+              await new Promise(resolve => requestAnimationFrame(resolve))
             }
-          } else {
-            // 对于较少数据，直接批量处理
-            panel.batchCheckChange(nodesToProcess, checked, false)
           }
-
           const endTime = performance.now()
-
-          // 开发环境下输出性能信息
           if (process.env.NODE_ENV === 'development') {
             console.log(`[Cascader] 全选操作完成，处理 ${nodesToProcess.length} 个节点，耗时 ${(endTime - startTime).toFixed(2)}ms`)
           }
         } finally {
           isSelectAllProcessing.value = false
         }
-      }, 50) // 50ms 防抖延迟
+      }, 50)
     }
 
     // 虚拟列表参数，可根据需要调整
@@ -307,13 +361,6 @@ export default defineComponent({
       virtualListError.value = true
     }
 
-    const handleSelectAll = () => {
-      if (isAllDisabled.value) return
-
-      const shouldSelect = !isAllSelected.value
-      batchSelectAll(shouldSelect)
-    }
-
     const handleSelectAllChange = (checked: CheckboxValueType) => {
       if (isAllDisabled.value) return
 
@@ -327,6 +374,24 @@ export default defineComponent({
         selectAllDebounceTimer.value = null
       }
     })
+
+    // 节点渲染性能打印（在模板渲染节点时调用）
+    function logRenderNode(nodeUid: string) {
+      // 这里只做简单打印，实际可统计渲染次数
+      console.log(`[Cascader] 渲染节点: ${nodeUid}`)
+    }
+
+    // watch v-model 同步状态
+    watch(
+      () => props.modelValue,
+      (val) => {
+        if (val && typeof val === 'object') {
+          isAllSelectedFlag.value = !!val.allSelected
+          checkedExceptions.value = new Set(val.exceptions || [])
+        }
+      },
+      { immediate: true }
+    )
 
     return {
       ns,
@@ -354,6 +419,9 @@ export default defineComponent({
       handleSelectAll,
       handleSelectAllChange,
       isSelectAllProcessing,
+      isNodeChecked,
+      handleNodeCheck,
+      logRenderNode,
     }
   },
 })
