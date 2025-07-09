@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var lodashUnified = require('lodash-unified');
 var token = require('./token.js');
-var option = require('./option.js');
+var option = require('./option2.js');
 var strings = require('../../../utils/strings.js');
 var error = require('../../../utils/error.js');
 var shared = require('@vue/shared');

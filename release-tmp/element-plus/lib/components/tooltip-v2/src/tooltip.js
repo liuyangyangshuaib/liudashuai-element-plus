@@ -2,10 +2,10 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var root = require('./root2.js');
+var root = require('./root.js');
 var trigger = require('./trigger2.js');
-var arrow = require('./arrow.js');
-var content = require('./content.js');
+var arrow = require('./arrow2.js');
+var content = require('./content2.js');
 var runtime = require('../../../utils/vue/props/runtime.js');
 
 const tooltipV2Props = runtime.buildProps({

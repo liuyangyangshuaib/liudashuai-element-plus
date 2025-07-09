@@ -2,11 +2,11 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var select$1 = require('./src/select2.js');
-var option = require('./src/option2.js');
+var select$1 = require('./src/select.js');
+var option = require('./src/option.js');
 var optionGroup = require('./src/option-group.js');
 var token = require('./src/token.js');
-var select = require('./src/select.js');
+var select = require('./src/select2.js');
 var install = require('../../utils/vue/install.js');
 
 const ElSelect = install.withInstall(select$1["default"], {

@@ -1,124 +1,56 @@
 <template>
-  <el-tooltip
-    ref="tooltipRef"
-    :visible="popperVisible"
-    :teleported="teleported"
-    :popper-class="[nsCascader.e('dropdown'), popperClass]"
-    :popper-options="popperOptions"
-    :fallback-placements="fallbackPlacements"
-    :stop-popper-mouse-event="false"
-    :gpu-acceleration="false"
-    :placement="placement"
-    :transition="`${nsCascader.namespace.value}-zoom-in-top`"
-    effect="light"
-    pure
-    :persistent="persistent"
-    @hide="hideSuggestionPanel"
-  >
+  <el-tooltip ref="tooltipRef" :visible="popperVisible" :teleported="teleported"
+    :popper-class="[nsCascader.e('dropdown'), popperClass]" :popper-options="popperOptions"
+    :fallback-placements="fallbackPlacements" :stop-popper-mouse-event="false" :gpu-acceleration="false"
+    :placement="placement" :transition="`${nsCascader.namespace.value}-zoom-in-top`" effect="light" pure
+    :persistent="persistent" @hide="hideSuggestionPanel">
     <template #default>
-      <div
-        v-clickoutside:[contentRef]="() => togglePopperVisible(false)"
-        :class="cascaderKls"
-        :style="cascaderStyle"
-        @click="() => togglePopperVisible(readonly ? undefined : true)"
-        @keydown="handleKeyDown"
-        @mouseenter="inputHover = true"
-        @mouseleave="inputHover = false"
-      >
-        <el-input
-          ref="input"
-          v-model="inputValue"
-          :placeholder="currentPlaceholder"
-          :readonly="readonly"
-          :disabled="isDisabled"
-          :validate-event="false"
-          :size="realSize"
-          :class="inputClass"
-          :tabindex="multiple && filterable && !isDisabled ? -1 : undefined"
-          @compositionstart="handleComposition"
-          @compositionupdate="handleComposition"
-          @compositionend="handleComposition"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @input="handleInput"
-        >
+      <div v-clickoutside:[contentRef]="() => togglePopperVisible(false)" :class="cascaderKls" :style="cascaderStyle"
+        @click="() => togglePopperVisible(readonly ? undefined : true)" @keydown="handleKeyDown"
+        @mouseenter="inputHover = true" @mouseleave="inputHover = false">
+        <el-input ref="input" v-model="inputValue" :placeholder="currentPlaceholder" :readonly="readonly"
+          :disabled="isDisabled" :validate-event="false" :size="realSize" :class="inputClass"
+          :tabindex="multiple && filterable && !isDisabled ? -1 : undefined" @compositionstart="handleComposition"
+          @compositionupdate="handleComposition" @compositionend="handleComposition" @focus="handleFocus"
+          @blur="handleBlur" @input="handleInput">
           <template v-if="$slots.prefix" #prefix>
             <slot name="prefix" />
           </template>
           <template #suffix>
-            <el-icon
-              v-if="clearBtnVisible"
-              key="clear"
-              :class="[nsInput.e('icon'), 'icon-circle-close']"
-              @click.stop="handleClear"
-            >
+            <el-icon v-if="clearBtnVisible" key="clear" :class="[nsInput.e('icon'), 'icon-circle-close']"
+              @click.stop="handleClear">
               <circle-close />
             </el-icon>
-            <el-icon
-              v-else
-              key="arrow-down"
-              :class="cascaderIconKls"
-              @click.stop="togglePopperVisible()"
-            >
+            <el-icon v-else key="arrow-down" :class="cascaderIconKls" @click.stop="togglePopperVisible()">
               <arrow-down />
             </el-icon>
           </template>
         </el-input>
 
-        <div
-          v-if="multiple"
-          ref="tagWrapper"
-          :class="[
-            nsCascader.e('tags'),
-            nsCascader.is('validate', Boolean(validateState)),
-          ]"
-        >
+        <div v-if="multiple" ref="tagWrapper" :class="[
+          nsCascader.e('tags'),
+          nsCascader.is('validate', Boolean(validateState)),
+        ]">
           <slot name="tag" :data="allPresentTags">
-            <el-tag
-              v-for="tag in presentTags"
-              :key="tag.key"
-              :type="tagType"
-              :size="tagSize"
-              :effect="tagEffect"
-              :hit="tag.hitState"
-              :closable="tag.closable"
-              disable-transitions
-              @close="deleteTag(tag)"
-            >
+            <el-tag v-for="tag in presentTags" :key="tag.key" :type="tagType" :size="tagSize" :effect="tagEffect"
+              :hit="tag.hitState" :closable="tag.closable" disable-transitions @close="deleteTag(tag)">
               <template v-if="tag.isCollapseTag === false">
                 <span>{{ tag.text }}</span>
               </template>
               <template v-else>
-                <el-tooltip
-                  :disabled="popperVisible || !collapseTagsTooltip"
-                  :fallback-placements="['bottom', 'top', 'right', 'left']"
-                  placement="bottom"
-                  effect="light"
-                >
+                <el-tooltip :disabled="popperVisible || !collapseTagsTooltip"
+                  :fallback-placements="['bottom', 'top', 'right', 'left']" placement="bottom" effect="light">
                   <template #default>
                     <span>{{ tag.text }}</span>
                   </template>
                   <template #content>
                     <el-scrollbar :max-height="maxCollapseTagsTooltipHeight">
                       <div :class="nsCascader.e('collapse-tags')">
-                        <div
-                          v-for="(tag2, idx) in allPresentTags.slice(
-                            maxCollapseTags
-                          )"
-                          :key="idx"
-                          :class="nsCascader.e('collapse-tag')"
-                        >
-                          <el-tag
-                            :key="tag2.key"
-                            class="in-tooltip"
-                            :type="tagType"
-                            :size="tagSize"
-                            :effect="tagEffect"
-                            :hit="tag2.hitState"
-                            :closable="tag2.closable"
-                            disable-transitions
-                            @close="deleteTag(tag2)"
-                          >
+                        <div v-for="(tag2, idx) in allPresentTags.slice(
+                          maxCollapseTags
+                        )" :key="idx" :class="nsCascader.e('collapse-tag')">
+                          <el-tag :key="tag2.key" class="in-tooltip" :type="tagType" :size="tagSize" :effect="tagEffect"
+                            :hit="tag2.hitState" :closable="tag2.closable" disable-transitions @close="deleteTag(tag2)">
                             <span>{{ tag2.text }}</span>
                           </el-tag>
                         </div>
@@ -129,61 +61,31 @@
               </template>
             </el-tag>
           </slot>
-          <input
-            v-if="filterable && !isDisabled"
-            v-model="searchInputValue"
-            type="text"
-            :class="nsCascader.e('search-input')"
-            :placeholder="presentText ? '' : inputPlaceholder"
-            @input="(e) => handleInput(searchInputValue, e as KeyboardEvent)"
-            @click.stop="togglePopperVisible(true)"
-            @keydown.delete="handleDelete"
-            @compositionstart="handleComposition"
-            @compositionupdate="handleComposition"
-            @compositionend="handleComposition"
-            @focus="handleFocus"
-            @blur="handleBlur"
-          />
+          <input v-if="filterable && !isDisabled" v-model="searchInputValue" type="text"
+            :class="nsCascader.e('search-input')" :placeholder="presentText ? '' : inputPlaceholder"
+            @input="(e) => handleInput(searchInputValue, e as KeyboardEvent)" @click.stop="togglePopperVisible(true)"
+            @keydown.delete="handleDelete" @compositionstart="handleComposition" @compositionupdate="handleComposition"
+            @compositionend="handleComposition" @focus="handleFocus" @blur="handleBlur" />
         </div>
       </div>
     </template>
 
     <template #content>
-      <el-cascader-panel
-        v-show="!filtering"
-        ref="cascaderPanelRef"
-        v-model="checkedValue"
-        :options="options"
-        :props="props.props"
-        :border="false"
-        :render-label="$slots.default"
-        @expand-change="handleExpandChange"
-        @close="$nextTick(() => togglePopperVisible(false))"
-      >
+      <el-cascader-panel v-show="!filtering" ref="cascaderPanelRef" v-model="checkedValue" :options="options"
+        :props="props.props" :border="false" :render-label="$slots.default" @expand-change="handleExpandChange"
+        @close="$nextTick(() => togglePopperVisible(false))">
         <template #empty>
           <slot name="empty" />
         </template>
       </el-cascader-panel>
-      <el-scrollbar
-        v-if="filterable"
-        v-show="filtering"
-        ref="suggestionPanel"
-        tag="ul"
-        :class="nsCascader.e('suggestion-panel')"
-        :view-class="nsCascader.e('suggestion-list')"
-        @keydown="handleSuggestionKeyDown"
-      >
+      <el-scrollbar v-if="filterable" v-show="filtering" ref="suggestionPanel" tag="ul"
+        :class="nsCascader.e('suggestion-panel')" :view-class="nsCascader.e('suggestion-list')"
+        @keydown="handleSuggestionKeyDown">
         <template v-if="suggestions.length">
-          <li
-            v-for="item in suggestions"
-            :key="item.uid"
-            :class="[
-              nsCascader.e('suggestion-item'),
-              nsCascader.is('checked', item.checked),
-            ]"
-            :tabindex="-1"
-            @click="handleSuggestionClick(item)"
-          >
+          <li v-for="item in suggestions" :key="item.uid" :class="[
+            nsCascader.e('suggestion-item'),
+            nsCascader.is('checked', item.checked),
+          ]" :tabindex="-1" @click="handleSuggestionClick(item)">
             <slot name="suggestion-item" :item="item">
               <span>{{ item.text }}</span>
               <el-icon v-if="item.checked">
@@ -718,8 +620,10 @@ onMounted(() => {
   inputInitialHeight = inputInner.offsetHeight || inputInnerHeight
   useResizeObserver(inputInner, updateStyle)
 })
-
 defineExpose({
+  addNode: (val: string) => {
+    cascaderPanelRef.value?.addNode(val)
+  },
   /**
    * @description get an array of currently selected node,(leafOnly) whether only return the leaf checked nodes, default is `false`
    */

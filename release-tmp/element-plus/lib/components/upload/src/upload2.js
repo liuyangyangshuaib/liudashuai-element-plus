@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
 var constants = require('./constants.js');
-var uploadList = require('./upload-list2.js');
+var uploadList = require('./upload-list.js');
 var uploadContent = require('./upload-content.js');
 var useHandlers = require('./use-handlers.js');
 var upload = require('./upload.js');

@@ -1,5 +1,10 @@
 # LiuDashuai Element Plus
 
+
+更新日志
+ - 1.0.3 addNodeByValue进行调整 改用传入数组的入参  发现虚拟列表组件加的没什么吊用 组件自带虚拟节点操作 直接删除
+ - 1.0.2 添加了addNodeByValue 和 removeNodeByValue 方法  用于外部组件操作
+
 这是一个基于 [Element Plus](https://element-plus.org/) 的定制化 Vue 3 组件库。
 
 ## 主要修改

@@ -17,21 +17,20 @@
       </el-checkbox>
     </div>
 
-    <FixedSizeList v-if="!isLoading && !isEmpty && !virtualListError" :height="virtualListHeight"
+    <!-- <FixedSizeList v-if="!isLoading && !isEmpty && !virtualListError" :height="virtualListHeight"
       :item-size="virtualItemSize" :data="nodes" :total="nodes.length"
-      :class="[ns.e('virtual-list'), 'cascader-virtual-list']" :scrollbar-always-on="false" :cache="2"
+      :class="[ns.e('virtual-list'), 'cascader-virtual-list']" :scrollbar-always-on="false"
       @scroll="handleVirtualListScroll" :use-is-scrolling="false" :perf-mode="true" container-element="div"
-      inner-element="div" role="listbox" :aria-label="t('el.cascader.options')" @error="handleVirtualListError">
-      <template #default="{ data, index, style }">
-        <el-cascader-node :key="data[index].uid" :node="data[index]" :menu-id="menuId" :style="style"
-          @expand="handleExpand" @check="handleNodeCheck" :checked="isNodeChecked(data[index].uid)"
-          :onVnodeMounted="() => logRenderNode(data[index].uid)" />
+      inner-element="div" role="listbox" :aria-label="t('el.cascader.options')" @error="handleVirtualListError"
+      ref="virtualListRef">
+      <template #default="{ data, index, style }" :key="virtualListKey">
       </template>
-    </FixedSizeList>
-    <template v-else>
-      <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"
-        :onVnodeMounted="() => logRenderNode(node.uid)" />
-    </template>
+    </FixedSizeList> -->
+
+    <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"
+      @check="handleNodeCheck" :checked="isNodeChecked(node.uid)" :onVnodeMounted="() => logRenderNode(node.uid)" />
+    <!-- <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"
+        :onVnodeMounted="() => logRenderNode(node.uid)" /> -->
     <div v-if="isLoading" :class="ns.e('empty-text')">
       <el-icon size="14" :class="ns.is('loading')">
         <loading />
@@ -47,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, inject, ref, onBeforeUnmount, watch } from 'vue'
+import { computed, defineComponent, getCurrentInstance, inject, ref, onBeforeUnmount, watch, defineExpose } from 'vue'
 import ElScrollbar from '@element-plus/components/scrollbar'
 import { useId, useLocale, useNamespace } from '@element-plus/hooks'
 import { Loading } from '@element-plus/icons-vue'
@@ -155,6 +154,9 @@ export default defineComponent({
     const isAllSelectedFlag = ref(false)
     const checkedExceptions = ref(new Set<string>())
 
+    // 假设 selectedNodes 是 ref<Set<string>>()，存储已选节点的uid
+    const selectedNodes = ref<Set<string>>(new Set())
+
     // 判断节点是否选中
     function isNodeChecked(nodeUid: string) {
       if (isAllSelectedFlag.value) {
@@ -166,17 +168,14 @@ export default defineComponent({
 
     // 全选/取消全选
     function handleSelectAll(checked: boolean) {
-      const t0 = performance.now()
       isAllSelectedFlag.value = checked
       checkedExceptions.value.clear()
       emitSelected()
-      const t1 = performance.now()
-      console.log(`[Cascader] handleSelectAll(${checked}) 耗时: ${(t1 - t0).toFixed(2)}ms`)
+
     }
 
     // 单个节点选中/取消
     function handleNodeCheck(nodeUid: string, checked: boolean) {
-      const t0 = performance.now()
       if (isAllSelectedFlag.value) {
         if (!checked) checkedExceptions.value.add(nodeUid)
         else checkedExceptions.value.delete(nodeUid)
@@ -185,26 +184,6 @@ export default defineComponent({
         else checkedExceptions.value.delete(nodeUid)
       }
       emitSelected()
-      const t1 = performance.now()
-      console.log(`[Cascader] handleNodeCheck(${nodeUid}, ${checked}) 耗时: ${(t1 - t0).toFixed(2)}ms`)
-    }
-
-    // 获取所有选中节点的值
-    function getSelectedNodeValues() {
-      const t0 = performance.now()
-      const result: (string | number)[] = []
-      const collect = (nodes: CascaderNode[]) => {
-        nodes.forEach(node => {
-          if (!node.isDisabled && isNodeChecked(node.uid.toString())) {
-            result.push(node.value)
-          }
-          if (node.children) collect(node.children)
-        })
-      }
-      collect(props.nodes)
-      const t1 = performance.now()
-      console.log(`[Cascader] getSelectedNodeValues 耗时: ${(t1 - t0).toFixed(2)}ms, 选中节点数: ${result.length}`)
-      return result
     }
 
     // 只 emit 一次事件，避免父组件频繁响应
@@ -270,7 +249,6 @@ export default defineComponent({
       selectAllDebounceTimer.value = window.setTimeout(async () => {
         isSelectAllProcessing.value = true
         try {
-          const startTime = performance.now()
           updateSelectAllCache()
           const nodesToProcess = selectableNodes.value
           if (nodesToProcess.length === 0) return
@@ -287,10 +265,10 @@ export default defineComponent({
               await new Promise(resolve => requestAnimationFrame(resolve))
             }
           }
-          const endTime = performance.now()
-          if (process.env.NODE_ENV === 'development') {
-            console.log(`[Cascader] 全选操作完成，处理 ${nodesToProcess.length} 个节点，耗时 ${(endTime - startTime).toFixed(2)}ms`)
-          }
+          // const endTime = performance.now()
+          // if (process.env.NODE_ENV === 'development') {
+          //   console.log(`[Cascader] 全选操作完成，处理 ${nodesToProcess.length} 个节点，耗时 ${(endTime - startTime).toFixed(2)}ms`)
+          // }
         } finally {
           isSelectAllProcessing.value = false
         }
@@ -367,6 +345,42 @@ export default defineComponent({
       batchSelectAll(checked as boolean)
     }
 
+    // 添加选择的节点
+    function addNode(node: CascaderNode) {
+      console.log('addNode-menu', node)
+      checkedExceptions.value.add(node.uid)
+      if (!panel.config.checkStrictly) {
+        // 递归添加所有子节点
+        // const allNodes = collectAllNodes(node)
+        // allNodes.forEach(n => selectedNodes.value.add(n.uid))
+        // allNodes.push(node)
+      } else {
+        selectedNodes.value.add(node.uid)
+      }
+    }
+
+    // 删除选择的节点
+    function removeNode(node: CascaderNode) {
+      if (!panel.config.checkStrictly) {
+        // 递归移除所有子节点
+        const allNodes = collectAllNodes(node)
+        allNodes.forEach(n => selectedNodes.value.delete(n.uid))
+      } else {
+        selectedNodes.value.delete(node.uid)
+      }
+    }
+
+    // 递归收集所有子节点（包含自身）
+    function collectAllNodes(node: CascaderNode): CascaderNode[] {
+      const result: CascaderNode[] = [node]
+      if (node.children && node.children.length > 0) {
+        node.children.forEach(child => {
+          result.push(...collectAllNodes(child))
+        })
+      }
+      return result
+    }
+
     // 清理定时器
     onBeforeUnmount(() => {
       if (selectAllDebounceTimer.value) {
@@ -392,8 +406,18 @@ export default defineComponent({
       },
       { immediate: true }
     )
+    const virtualListKey = ref(0)
+    const virtualListRef = ref<InstanceType<typeof FixedSizeList>>()
+
+    function updateVirtualListKey() {
+      virtualListKey.value++ // 让 key 变化，强制刷新
+      virtualListRef.value?.forceUpdate()
+    }
+    defineExpose({
+    })
 
     return {
+      updateVirtualListKey,
       ns,
       panel,
       hoverZone,
@@ -422,6 +446,7 @@ export default defineComponent({
       isNodeChecked,
       handleNodeCheck,
       logRenderNode,
+      selectedNodes,
     }
   },
 })

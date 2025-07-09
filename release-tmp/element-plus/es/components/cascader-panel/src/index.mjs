@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, provide, reactive, watch, onBeforeUpdat
 import { isEqual, flattenDeep, cloneDeep } from 'lodash-unified';
 import ElCascaderMenu from './menu.mjs';
 import Store from './store.mjs';
-import Node from './node.mjs';
+import Node from './node2.mjs';
 import { CommonProps, useCascaderConfig } from './config.mjs';
 import { sortByOriginalOrder, checkNode, getMenuIndex } from './utils.mjs';
 import { CASCADER_PANEL_INJECTION_KEY } from './types.mjs';
@@ -237,6 +237,58 @@ const _sfc_main = defineComponent({
           break;
       }
     };
+    function addNodeByValue(values) {
+      if (!store)
+        return;
+      if (!Array.isArray(values)) {
+        console.warn("\u53C2\u6570\u5FC5\u987B\u4E3A\u6570\u7EC4");
+        return;
+      }
+      const nodes = values.map((value) => store.getNodeByValue(value)).filter(Boolean);
+      if (nodes.length === 0) {
+        console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
+        return;
+      }
+      const valueSet = new Set(values);
+      const filteredNodes = nodes.filter((node) => {
+        let parent = node.parent;
+        while (parent) {
+          if (valueSet.has(parent.value)) {
+            return false;
+          }
+          parent = parent.parent;
+        }
+        return true;
+      });
+      function checkNodeRecursively(node) {
+        node.doCheck(true);
+        if (!config.value.checkStrictly && node.children) {
+          node.children.forEach((child) => checkNodeRecursively(child));
+        }
+      }
+      filteredNodes.forEach((node) => checkNodeRecursively(node));
+      calculateCheckedValue();
+      menus.value = [...menus.value];
+    }
+    function removeNodeByValue(value) {
+      if (!store)
+        return;
+      const node = store.getNodeByValue(value);
+      if (!node) {
+        console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
+        return;
+      }
+      console.log("node", node);
+      function checkNodeRecursively(node2) {
+        node2.doCheck(false);
+        if (!config.value.checkStrictly && node2.children) {
+          node2.children.forEach((child) => checkNodeRecursively(child));
+        }
+      }
+      checkNodeRecursively(node);
+      calculateCheckedValue();
+      menus.value = [...menus.value];
+    }
     provide(CASCADER_PANEL_INJECTION_KEY, reactive({
       config,
       expandingNode,
@@ -268,6 +320,8 @@ const _sfc_main = defineComponent({
     onBeforeUpdate(() => menuList.value = []);
     onMounted(() => !isEmpty(props.modelValue) && syncCheckedValue());
     return {
+      addNodeByValue,
+      removeNodeByValue,
       ns,
       menuList,
       menus,

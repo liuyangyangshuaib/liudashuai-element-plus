@@ -1,8 +1,8 @@
-import { defineComponent, getCurrentInstance, inject, ref, computed, onBeforeUnmount, resolveComponent, openBlock, createBlock, normalizeClass, withCtx, createCommentVNode, createElementBlock, createVNode, withModifiers, Fragment, createTextVNode, toDisplayString, normalizeStyle, renderList, renderSlot } from 'vue';
+import { defineComponent, getCurrentInstance, inject, ref, computed, onBeforeUnmount, watch, defineExpose, resolveComponent, openBlock, createBlock, normalizeClass, withCtx, createCommentVNode, createElementBlock, createVNode, withModifiers, Fragment, createTextVNode, toDisplayString, renderList, renderSlot } from 'vue';
 import { ElScrollbar } from '../../scrollbar/index.mjs';
 import { Loading } from '@element-plus/icons-vue';
 import { ElIcon } from '../../icon/index.mjs';
-import ElCascaderNode from './node2.mjs';
+import ElCascaderNode from './node.mjs';
 import { ElCheckbox } from '../../checkbox/index.mjs';
 import { CASCADER_PANEL_INJECTION_KEY } from './types.mjs';
 import _export_sfc from '../../../_virtual/plugin-vue_export-helper.mjs';
@@ -29,9 +29,13 @@ const _sfc_main = defineComponent({
     index: {
       type: Number,
       required: true
+    },
+    modelValue: {
+      type: Object,
+      default: () => ({ allSelected: false, exceptions: [] })
     }
   },
-  setup(props) {
+  setup(props, { emit }) {
     const instance = getCurrentInstance();
     const ns = useNamespace("cascader-menu");
     const { t } = useLocale();
@@ -60,6 +64,43 @@ const _sfc_main = defineComponent({
     const isAllSelected = computed(() => selectableNodes.value.length > 0 && checkedNodes.value.length === selectableNodes.value.length);
     const isIndeterminate = computed(() => checkedNodes.value.length > 0 && checkedNodes.value.length < selectableNodes.value.length);
     const isAllDisabled = computed(() => selectableNodes.value.length === 0);
+    const isAllSelectedFlag = ref(false);
+    const checkedExceptions = ref(/* @__PURE__ */ new Set());
+    const selectedNodes = ref(/* @__PURE__ */ new Set());
+    function isNodeChecked(nodeUid) {
+      if (isAllSelectedFlag.value) {
+        return !checkedExceptions.value.has(nodeUid);
+      } else {
+        return checkedExceptions.value.has(nodeUid);
+      }
+    }
+    function handleSelectAll(checked) {
+      isAllSelectedFlag.value = checked;
+      checkedExceptions.value.clear();
+      emitSelected();
+    }
+    function handleNodeCheck(nodeUid, checked) {
+      if (isAllSelectedFlag.value) {
+        if (!checked)
+          checkedExceptions.value.add(nodeUid);
+        else
+          checkedExceptions.value.delete(nodeUid);
+      } else {
+        if (checked)
+          checkedExceptions.value.add(nodeUid);
+        else
+          checkedExceptions.value.delete(nodeUid);
+      }
+      emitSelected();
+    }
+    function emitSelected() {
+      if (instance && instance.emit) {
+        instance.emit("update:modelValue", {
+          allSelected: isAllSelectedFlag.value,
+          exceptions: Array.from(checkedExceptions.value)
+        });
+      }
+    }
     const updateSelectAllCache = () => {
       const now = Date.now();
       const cache = selectAllCache.value;
@@ -99,29 +140,20 @@ const _sfc_main = defineComponent({
       selectAllDebounceTimer.value = window.setTimeout(async () => {
         isSelectAllProcessing.value = true;
         try {
-          const startTime = performance.now();
           updateSelectAllCache();
           const nodesToProcess = selectableNodes.value;
           if (nodesToProcess.length === 0)
             return;
-          if (nodesToProcess.length > 1e3) {
-            const batchSize = 500;
-            const totalBatches = Math.ceil(nodesToProcess.length / batchSize);
-            for (let i = 0; i < totalBatches; i++) {
-              const start = i * batchSize;
-              const end = Math.min(start + batchSize, nodesToProcess.length);
-              const batch = nodesToProcess.slice(start, end);
-              panel.batchCheckChange(batch, checked, false);
-              if (i < totalBatches - 1) {
-                await new Promise((resolve) => requestAnimationFrame(resolve));
-              }
+          const batchSize = 200;
+          const totalBatches = Math.ceil(nodesToProcess.length / batchSize);
+          for (let i = 0; i < totalBatches; i++) {
+            const start = i * batchSize;
+            const end = Math.min(start + batchSize, nodesToProcess.length);
+            const batch = nodesToProcess.slice(start, end);
+            panel.batchCheckChange(batch, checked, i === totalBatches - 1);
+            if (i < totalBatches - 1) {
+              await new Promise((resolve) => requestAnimationFrame(resolve));
             }
-          } else {
-            panel.batchCheckChange(nodesToProcess, checked, false);
-          }
-          const endTime = performance.now();
-          if (process.env.NODE_ENV === "development") {
-            console.log(`[Cascader] \u5168\u9009\u64CD\u4F5C\u5B8C\u6210\uFF0C\u5904\u7406 ${nodesToProcess.length} \u4E2A\u8282\u70B9\uFF0C\u8017\u65F6 ${(endTime - startTime).toFixed(2)}ms`);
           }
         } finally {
           isSelectAllProcessing.value = false;
@@ -176,12 +208,6 @@ const _sfc_main = defineComponent({
     const handleVirtualListError = () => {
       virtualListError.value = true;
     };
-    const handleSelectAll = () => {
-      if (isAllDisabled.value)
-        return;
-      const shouldSelect = !isAllSelected.value;
-      batchSelectAll(shouldSelect);
-    };
     const handleSelectAllChange = (checked) => {
       if (isAllDisabled.value)
         return;
@@ -193,7 +219,25 @@ const _sfc_main = defineComponent({
         selectAllDebounceTimer.value = null;
       }
     });
+    function logRenderNode(nodeUid) {
+      console.log(`[Cascader] \u6E32\u67D3\u8282\u70B9: ${nodeUid}`);
+    }
+    watch(() => props.modelValue, (val) => {
+      if (val && typeof val === "object") {
+        isAllSelectedFlag.value = !!val.allSelected;
+        checkedExceptions.value = new Set(val.exceptions || []);
+      }
+    }, { immediate: true });
+    const virtualListKey = ref(0);
+    const virtualListRef = ref();
+    function updateVirtualListKey() {
+      var _a;
+      virtualListKey.value++;
+      (_a = virtualListRef.value) == null ? void 0 : _a.forceUpdate();
+    }
+    defineExpose({});
     return {
+      updateVirtualListKey,
       ns,
       panel,
       hoverZone,
@@ -218,7 +262,11 @@ const _sfc_main = defineComponent({
       isAllDisabled,
       handleSelectAll,
       handleSelectAllChange,
-      isSelectAllProcessing
+      isSelectAllProcessing,
+      isNodeChecked,
+      handleNodeCheck,
+      logRenderNode,
+      selectedNodes
     };
   }
 });
@@ -227,7 +275,6 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = resolveComponent("el-icon");
   const _component_el_checkbox = resolveComponent("el-checkbox");
   const _component_el_cascader_node = resolveComponent("el-cascader-node");
-  const _component_FixedSizeList = resolveComponent("FixedSizeList");
   const _component_el_scrollbar = resolveComponent("el-scrollbar");
   return openBlock(), createBlock(_component_el_scrollbar, {
     key: _ctx.menuId,
@@ -275,44 +322,29 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
           }, 8, ["model-value", "indeterminate", "disabled", "onClick", "onUpdate:modelValue"])
         ], 10, ["onClick"])) : createCommentVNode("v-if", true),
-        !_ctx.isLoading && !_ctx.isEmpty && !_ctx.virtualListError ? (openBlock(), createBlock(_component_FixedSizeList, {
-          key: 1,
-          height: _ctx.virtualListHeight,
-          "item-size": _ctx.virtualItemSize,
-          data: _ctx.nodes,
-          total: _ctx.nodes.length,
-          class: normalizeClass([_ctx.ns.e("virtual-list"), "cascader-virtual-list"]),
-          "scrollbar-always-on": false,
-          cache: 2,
-          onScroll: _ctx.handleVirtualListScroll,
-          "use-is-scrolling": false,
-          "perf-mode": true,
-          "container-element": "div",
-          "inner-element": "div",
-          role: "listbox",
-          "aria-label": _ctx.t("el.cascader.options"),
-          onError: _ctx.handleVirtualListError
-        }, {
-          default: withCtx(({ data, index, style }) => [
-            (openBlock(), createBlock(_component_el_cascader_node, {
-              key: data[index].uid,
-              node: data[index],
-              "menu-id": _ctx.menuId,
-              style: normalizeStyle(style),
-              onExpand: _ctx.handleExpand
-            }, null, 8, ["node", "menu-id", "style", "onExpand"]))
-          ]),
-          _: 1
-        }, 8, ["height", "item-size", "data", "total", "class", "onScroll", "aria-label", "onError"])) : (openBlock(true), createElementBlock(Fragment, { key: 2 }, renderList(_ctx.nodes, (node) => {
+        createCommentVNode(` <FixedSizeList v-if="!isLoading && !isEmpty && !virtualListError" :height="virtualListHeight"
+      :item-size="virtualItemSize" :data="nodes" :total="nodes.length"
+      :class="[ns.e('virtual-list'), 'cascader-virtual-list']" :scrollbar-always-on="false"
+      @scroll="handleVirtualListScroll" :use-is-scrolling="false" :perf-mode="true" container-element="div"
+      inner-element="div" role="listbox" :aria-label="t('el.cascader.options')" @error="handleVirtualListError"
+      ref="virtualListRef">
+      <template #default="{ data, index, style }" :key="virtualListKey">
+      </template>
+    </FixedSizeList> `),
+        (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.nodes, (node) => {
           return openBlock(), createBlock(_component_el_cascader_node, {
             key: node.uid,
             node,
             "menu-id": _ctx.menuId,
-            onExpand: _ctx.handleExpand
-          }, null, 8, ["node", "menu-id", "onExpand"]);
+            onExpand: _ctx.handleExpand,
+            onCheck: _ctx.handleNodeCheck,
+            checked: _ctx.isNodeChecked(node.uid),
+            onVnodeMounted: () => _ctx.logRenderNode(node.uid)
+          }, null, 8, ["node", "menu-id", "onExpand", "onCheck", "checked", "onVnodeMounted"]);
         }), 128)),
+        createCommentVNode(' <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"\n        :onVnodeMounted="() => logRenderNode(node.uid)" /> '),
         _ctx.isLoading ? (openBlock(), createElementBlock("div", {
-          key: 3,
+          key: 1,
           class: normalizeClass(_ctx.ns.e("empty-text"))
         }, [
           createVNode(_component_el_icon, {
@@ -326,13 +358,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
           }, 8, ["class"]),
           createTextVNode(" " + toDisplayString(_ctx.t("el.cascader.loading")), 1)
         ], 2)) : _ctx.isEmpty ? (openBlock(), createElementBlock("div", {
-          key: 4,
+          key: 2,
           class: normalizeClass(_ctx.ns.e("empty-text"))
         }, [
           renderSlot(_ctx.$slots, "empty", {}, () => [
             createTextVNode(toDisplayString(_ctx.t("el.cascader.noData")), 1)
           ])
-        ], 2)) : ((_a = _ctx.panel) == null ? void 0 : _a.isHoverMenu) ? (openBlock(), createElementBlock(Fragment, { key: 5 }, [
+        ], 2)) : ((_a = _ctx.panel) == null ? void 0 : _a.isHoverMenu) ? (openBlock(), createElementBlock(Fragment, { key: 3 }, [
           createCommentVNode(" eslint-disable-next-line vue/html-self-closing "),
           (openBlock(), createElementBlock("svg", {
             ref: "hoverZone",

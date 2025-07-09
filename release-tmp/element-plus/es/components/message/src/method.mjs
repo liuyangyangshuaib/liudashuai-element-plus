@@ -1,6 +1,6 @@
 import { isVNode, render, createVNode } from 'vue';
-import MessageConstructor from './message.mjs';
-import { messageTypes, messageDefaults } from './message2.mjs';
+import MessageConstructor from './message2.mjs';
+import { messageTypes, messageDefaults } from './message.mjs';
 import { instances } from './instance.mjs';
 import { messageConfig } from '../../config-provider/src/config-provider.mjs';
 import { isClient } from '@vueuse/core';

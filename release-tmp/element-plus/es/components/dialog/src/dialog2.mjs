@@ -2,7 +2,7 @@ import { defineComponent, useSlots, computed, ref, provide, openBlock, createBlo
 import { ElOverlay } from '../../overlay/index.mjs';
 import ElFocusTrap from '../../focus-trap/src/focus-trap.mjs';
 import { ElTeleport } from '../../teleport/index.mjs';
-import ElDialogContent from './dialog-content2.mjs';
+import ElDialogContent from './dialog-content.mjs';
 import { dialogInjectionKey } from './constants.mjs';
 import { dialogProps, dialogEmits } from './dialog.mjs';
 import { useDialog } from './use-dialog.mjs';

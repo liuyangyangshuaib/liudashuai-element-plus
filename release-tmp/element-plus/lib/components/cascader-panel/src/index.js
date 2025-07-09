@@ -6,7 +6,7 @@ var vue = require('vue');
 var lodashUnified = require('lodash-unified');
 var menu = require('./menu.js');
 var store = require('./store.js');
-var node = require('./node.js');
+var node = require('./node2.js');
 var config = require('./config.js');
 var utils = require('./utils.js');
 var types = require('./types.js');
@@ -241,6 +241,58 @@ const _sfc_main = vue.defineComponent({
           break;
       }
     };
+    function addNodeByValue(values) {
+      if (!store$1)
+        return;
+      if (!Array.isArray(values)) {
+        console.warn("\u53C2\u6570\u5FC5\u987B\u4E3A\u6570\u7EC4");
+        return;
+      }
+      const nodes = values.map((value) => store$1.getNodeByValue(value)).filter(Boolean);
+      if (nodes.length === 0) {
+        console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
+        return;
+      }
+      const valueSet = new Set(values);
+      const filteredNodes = nodes.filter((node) => {
+        let parent = node.parent;
+        while (parent) {
+          if (valueSet.has(parent.value)) {
+            return false;
+          }
+          parent = parent.parent;
+        }
+        return true;
+      });
+      function checkNodeRecursively(node) {
+        node.doCheck(true);
+        if (!config$1.value.checkStrictly && node.children) {
+          node.children.forEach((child) => checkNodeRecursively(child));
+        }
+      }
+      filteredNodes.forEach((node) => checkNodeRecursively(node));
+      calculateCheckedValue();
+      menus.value = [...menus.value];
+    }
+    function removeNodeByValue(value) {
+      if (!store$1)
+        return;
+      const node = store$1.getNodeByValue(value);
+      if (!node) {
+        console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
+        return;
+      }
+      console.log("node", node);
+      function checkNodeRecursively(node2) {
+        node2.doCheck(false);
+        if (!config$1.value.checkStrictly && node2.children) {
+          node2.children.forEach((child) => checkNodeRecursively(child));
+        }
+      }
+      checkNodeRecursively(node);
+      calculateCheckedValue();
+      menus.value = [...menus.value];
+    }
     vue.provide(types.CASCADER_PANEL_INJECTION_KEY, vue.reactive({
       config: config$1,
       expandingNode,
@@ -272,6 +324,8 @@ const _sfc_main = vue.defineComponent({
     vue.onBeforeUpdate(() => menuList.value = []);
     vue.onMounted(() => !types$1.isEmpty(props.modelValue) && syncCheckedValue());
     return {
+      addNodeByValue,
+      removeNodeByValue,
       ns,
       menuList,
       menus,

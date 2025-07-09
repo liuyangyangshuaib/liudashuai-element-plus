@@ -1,15 +1,7 @@
 <template>
-  <div
-    :class="[ns.b('panel'), ns.is('bordered', border)]"
-    @keydown="handleKeyDown"
-  >
-    <el-cascader-menu
-      v-for="(menu, index) in menus"
-      :key="index"
-      :ref="(item) => (menuList[index] = item)"
-      :index="index"
-      :nodes="[...menu]"
-    >
+  <div :class="[ns.b('panel'), ns.is('bordered', border)]" @keydown="handleKeyDown">
+    <el-cascader-menu v-for="(menu, index) in menus" :key="index" :ref="(item) => (menuList[index] = item)"
+      :index="index" :nodes="[...menu]">
       <template #empty>
         <slot name="empty" />
       </template>
@@ -183,7 +175,7 @@ export default defineComponent({
       emitClose = true
     ) => {
       if (!nodes || nodes.length === 0) return
-      
+
       const { checkStrictly, multiple } = config.value
       manualChecked = true
 
@@ -200,7 +192,7 @@ export default defineComponent({
 
       // 只计算一次选中值
       calculateCheckedValue()
-      
+
       if (emitClose && !multiple && !checkStrictly) {
         emit('close')
       }
@@ -359,6 +351,70 @@ export default defineComponent({
       }
     }
 
+    function addNodeByValue(values: CascaderNodeValue[]) {
+      if (!store) return
+      if (!Array.isArray(values)) {
+        console.warn('参数必须为数组')
+        return
+      }
+      const nodes = values.map(value => store.getNodeByValue(value)).filter(Boolean)
+      if (nodes.length === 0) {
+        console.warn('未找到对应节点')
+        return
+      }
+
+      // 过滤掉被其他节点包含的子节点，只保留最顶层（父）节点
+      const valueSet = new Set(values)
+      const filteredNodes = nodes.filter(node => {
+        let parent = node.parent
+        while (parent) {
+          if (valueSet.has(parent.value)) {
+            return false // 如果父节点也在 values 中，则跳过该子节点
+          }
+          parent = parent.parent
+        }
+        return true
+      })
+
+      function checkNodeRecursively(node: CascaderNode) {
+        node.doCheck(true)
+        if (!config.value.checkStrictly && node.children) {
+          node.children.forEach(child => checkNodeRecursively(child))
+        }
+      }
+      filteredNodes.forEach(node => checkNodeRecursively(node))
+
+      calculateCheckedValue()
+      menus.value = [...menus.value] // 强制更新
+    }
+    function removeNodeByValue(value: CascaderNodeValue) {
+      if (!store) return
+      const node = store.getNodeByValue(value)
+      if (!node) {
+        console.warn('未找到对应节点')
+        return
+      }
+
+      console.log('node', node)
+      // 递归选中节点及其所有子节点（如果有父子关联）
+      function checkNodeRecursively(node: CascaderNode) {
+        node.doCheck(false)
+        // node.setCheckState(true)
+        if (!config.value.checkStrictly && node.children) {
+          node.children.forEach(child => checkNodeRecursively(child))
+        }
+      }
+      checkNodeRecursively(node)
+
+      // 重新计算选中值
+      calculateCheckedValue()
+      // nextTick(() => {
+      //   menus.value = [...menus.value]
+      //   // syncMenuState(checkedNodes.value)
+      // })
+      menus.value = [...menus.value] // 强制更新  怀疑响应式丢失或子组件依赖的是数组引用时。
+    }
+
     provide(
       CASCADER_PANEL_INJECTION_KEY,
       reactive({
@@ -406,6 +462,8 @@ export default defineComponent({
     onMounted(() => !isEmpty(props.modelValue) && syncCheckedValue())
 
     return {
+      addNodeByValue, // 暴露方法
+      removeNodeByValue, // 暴露方法
       ns,
       menuList,
       menus,

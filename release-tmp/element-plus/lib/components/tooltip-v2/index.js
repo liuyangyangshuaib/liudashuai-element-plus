@@ -3,9 +3,9 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var tooltip$1 = require('./src/tooltip2.js');
-var arrow = require('./src/arrow.js');
-var content = require('./src/content.js');
-var root = require('./src/root2.js');
+var arrow = require('./src/arrow2.js');
+var content = require('./src/content2.js');
+var root = require('./src/root.js');
 var tooltip = require('./src/tooltip.js');
 var trigger = require('./src/trigger2.js');
 var constants = require('./src/constants.js');
