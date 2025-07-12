@@ -2,7 +2,7 @@ import { defineComponent, ref, computed, provide, reactive, watch, onBeforeUpdat
 import { isEqual, flattenDeep, cloneDeep } from 'lodash-unified';
 import ElCascaderMenu from './menu.mjs';
 import Store from './store.mjs';
-import Node from './node2.mjs';
+import Node from './node.mjs';
 import { CommonProps, useCascaderConfig } from './config.mjs';
 import { sortByOriginalOrder, checkNode, getMenuIndex } from './utils.mjs';
 import { CASCADER_PANEL_INJECTION_KEY } from './types.mjs';
@@ -270,22 +270,36 @@ const _sfc_main = defineComponent({
       calculateCheckedValue();
       menus.value = [...menus.value];
     }
-    function removeNodeByValue(value) {
+    function removeNodeByValue(values) {
       if (!store)
         return;
-      const node = store.getNodeByValue(value);
-      if (!node) {
+      if (!Array.isArray(values)) {
+        console.warn("\u53C2\u6570\u5FC5\u987B\u4E3A\u6570\u7EC4");
+        return;
+      }
+      const nodes = values.map((value) => store.getNodeByValue(value)).filter(Boolean);
+      if (nodes.length === 0) {
         console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
         return;
       }
-      console.log("node", node);
-      function checkNodeRecursively(node2) {
-        node2.doCheck(false);
-        if (!config.value.checkStrictly && node2.children) {
-          node2.children.forEach((child) => checkNodeRecursively(child));
+      const valueSet = new Set(values);
+      const filteredNodes = nodes.filter((node) => {
+        let parent = node.parent;
+        while (parent) {
+          if (valueSet.has(parent.value)) {
+            return false;
+          }
+          parent = parent.parent;
+        }
+        return true;
+      });
+      function checkNodeRecursively(node) {
+        node.doCheck(false);
+        if (!config.value.checkStrictly && node.children) {
+          node.children.forEach((child) => checkNodeRecursively(child));
         }
       }
-      checkNodeRecursively(node);
+      filteredNodes.forEach((node) => checkNodeRecursively(node));
       calculateCheckedValue();
       menus.value = [...menus.value];
     }

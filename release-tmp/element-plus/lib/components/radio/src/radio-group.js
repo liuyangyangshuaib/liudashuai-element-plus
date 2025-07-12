@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var radio = require('./radio.js');
+var radio = require('./radio2.js');
 var runtime = require('../../../utils/vue/props/runtime.js');
 var index = require('../../../hooks/use-size/index.js');
 var index$1 = require('../../../hooks/use-aria/index.js');

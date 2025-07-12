@@ -6,7 +6,7 @@ var vue = require('vue');
 var index$1 = require('../../scrollbar/index.js');
 var iconsVue = require('@element-plus/icons-vue');
 var index = require('../../icon/index.js');
-var node = require('./node.js');
+var node = require('./node2.js');
 var index$2 = require('../../checkbox/index.js');
 var types = require('./types.js');
 var pluginVue_exportHelper = require('../../../_virtual/plugin-vue_export-helper.js');
@@ -224,7 +224,6 @@ const _sfc_main = vue.defineComponent({
       }
     });
     function logRenderNode(nodeUid) {
-      console.log(`[Cascader] \u6E32\u67D3\u8282\u70B9: ${nodeUid}`);
     }
     vue.watch(() => props.modelValue, (val) => {
       if (val && typeof val === "object") {
@@ -232,16 +231,7 @@ const _sfc_main = vue.defineComponent({
         checkedExceptions.value = new Set(val.exceptions || []);
       }
     }, { immediate: true });
-    const virtualListKey = vue.ref(0);
-    const virtualListRef = vue.ref();
-    function updateVirtualListKey() {
-      var _a;
-      virtualListKey.value++;
-      (_a = virtualListRef.value) == null ? void 0 : _a.forceUpdate();
-    }
-    vue.defineExpose({});
     return {
-      updateVirtualListKey,
       ns,
       panel,
       hoverZone,

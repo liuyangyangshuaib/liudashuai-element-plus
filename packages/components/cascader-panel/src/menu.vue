@@ -345,41 +345,6 @@ export default defineComponent({
       batchSelectAll(checked as boolean)
     }
 
-    // 添加选择的节点
-    function addNode(node: CascaderNode) {
-      console.log('addNode-menu', node)
-      checkedExceptions.value.add(node.uid)
-      if (!panel.config.checkStrictly) {
-        // 递归添加所有子节点
-        // const allNodes = collectAllNodes(node)
-        // allNodes.forEach(n => selectedNodes.value.add(n.uid))
-        // allNodes.push(node)
-      } else {
-        selectedNodes.value.add(node.uid)
-      }
-    }
-
-    // 删除选择的节点
-    function removeNode(node: CascaderNode) {
-      if (!panel.config.checkStrictly) {
-        // 递归移除所有子节点
-        const allNodes = collectAllNodes(node)
-        allNodes.forEach(n => selectedNodes.value.delete(n.uid))
-      } else {
-        selectedNodes.value.delete(node.uid)
-      }
-    }
-
-    // 递归收集所有子节点（包含自身）
-    function collectAllNodes(node: CascaderNode): CascaderNode[] {
-      const result: CascaderNode[] = [node]
-      if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
-          result.push(...collectAllNodes(child))
-        })
-      }
-      return result
-    }
 
     // 清理定时器
     onBeforeUnmount(() => {
@@ -392,7 +357,7 @@ export default defineComponent({
     // 节点渲染性能打印（在模板渲染节点时调用）
     function logRenderNode(nodeUid: string) {
       // 这里只做简单打印，实际可统计渲染次数
-      console.log(`[Cascader] 渲染节点: ${nodeUid}`)
+      // console.log(`[Cascader] 渲染节点: ${nodeUid}`)
     }
 
     // watch v-model 同步状态
@@ -406,18 +371,7 @@ export default defineComponent({
       },
       { immediate: true }
     )
-    const virtualListKey = ref(0)
-    const virtualListRef = ref<InstanceType<typeof FixedSizeList>>()
-
-    function updateVirtualListKey() {
-      virtualListKey.value++ // 让 key 变化，强制刷新
-      virtualListRef.value?.forceUpdate()
-    }
-    defineExpose({
-    })
-
     return {
-      updateVirtualListKey,
       ns,
       panel,
       hoverZone,

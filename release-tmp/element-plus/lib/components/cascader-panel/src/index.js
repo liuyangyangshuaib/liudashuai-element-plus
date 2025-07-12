@@ -6,7 +6,7 @@ var vue = require('vue');
 var lodashUnified = require('lodash-unified');
 var menu = require('./menu.js');
 var store = require('./store.js');
-var node = require('./node2.js');
+var node = require('./node.js');
 var config = require('./config.js');
 var utils = require('./utils.js');
 var types = require('./types.js');
@@ -274,22 +274,36 @@ const _sfc_main = vue.defineComponent({
       calculateCheckedValue();
       menus.value = [...menus.value];
     }
-    function removeNodeByValue(value) {
+    function removeNodeByValue(values) {
       if (!store$1)
         return;
-      const node = store$1.getNodeByValue(value);
-      if (!node) {
+      if (!Array.isArray(values)) {
+        console.warn("\u53C2\u6570\u5FC5\u987B\u4E3A\u6570\u7EC4");
+        return;
+      }
+      const nodes = values.map((value) => store$1.getNodeByValue(value)).filter(Boolean);
+      if (nodes.length === 0) {
         console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
         return;
       }
-      console.log("node", node);
-      function checkNodeRecursively(node2) {
-        node2.doCheck(false);
-        if (!config$1.value.checkStrictly && node2.children) {
-          node2.children.forEach((child) => checkNodeRecursively(child));
+      const valueSet = new Set(values);
+      const filteredNodes = nodes.filter((node) => {
+        let parent = node.parent;
+        while (parent) {
+          if (valueSet.has(parent.value)) {
+            return false;
+          }
+          parent = parent.parent;
+        }
+        return true;
+      });
+      function checkNodeRecursively(node) {
+        node.doCheck(false);
+        if (!config$1.value.checkStrictly && node.children) {
+          node.children.forEach((child) => checkNodeRecursively(child));
         }
       }
-      checkNodeRecursively(node);
+      filteredNodes.forEach((node) => checkNodeRecursively(node));
       calculateCheckedValue();
       menus.value = [...menus.value];
     }

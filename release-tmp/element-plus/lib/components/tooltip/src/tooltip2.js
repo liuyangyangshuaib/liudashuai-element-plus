@@ -2,10 +2,10 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var content = require('./content.js');
+var content = require('./content2.js');
 var trigger = require('./trigger2.js');
 var popper = require('../../popper/src/popper.js');
-var arrow = require('../../popper/src/arrow2.js');
+var arrow = require('../../popper/src/arrow.js');
 var index = require('../../../hooks/use-model-toggle/index.js');
 var runtime = require('../../../utils/vue/props/runtime.js');
 

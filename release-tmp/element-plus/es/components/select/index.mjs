@@ -1,8 +1,8 @@
-import Select from './src/select.mjs';
+import Select from './src/select2.mjs';
 import Option from './src/option.mjs';
 import OptionGroup from './src/option-group.mjs';
 export { selectGroupKey, selectKey } from './src/token.mjs';
-export { selectEmits, selectProps } from './src/select2.mjs';
+export { selectEmits, selectProps } from './src/select.mjs';
 import { withInstall, withNoopInstall } from '../../utils/vue/install.mjs';
 
 const ElSelect = withInstall(Select, {

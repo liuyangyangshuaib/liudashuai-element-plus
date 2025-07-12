@@ -1,8 +1,8 @@
-import { defineComponent, getCurrentInstance, inject, ref, computed, onBeforeUnmount, watch, defineExpose, resolveComponent, openBlock, createBlock, normalizeClass, withCtx, createCommentVNode, createElementBlock, createVNode, withModifiers, Fragment, createTextVNode, toDisplayString, renderList, renderSlot } from 'vue';
+import { defineComponent, getCurrentInstance, inject, ref, computed, onBeforeUnmount, watch, resolveComponent, openBlock, createBlock, normalizeClass, withCtx, createCommentVNode, createElementBlock, createVNode, withModifiers, Fragment, createTextVNode, toDisplayString, renderList, renderSlot } from 'vue';
 import { ElScrollbar } from '../../scrollbar/index.mjs';
 import { Loading } from '@element-plus/icons-vue';
 import { ElIcon } from '../../icon/index.mjs';
-import ElCascaderNode from './node.mjs';
+import ElCascaderNode from './node2.mjs';
 import { ElCheckbox } from '../../checkbox/index.mjs';
 import { CASCADER_PANEL_INJECTION_KEY } from './types.mjs';
 import _export_sfc from '../../../_virtual/plugin-vue_export-helper.mjs';
@@ -220,7 +220,6 @@ const _sfc_main = defineComponent({
       }
     });
     function logRenderNode(nodeUid) {
-      console.log(`[Cascader] \u6E32\u67D3\u8282\u70B9: ${nodeUid}`);
     }
     watch(() => props.modelValue, (val) => {
       if (val && typeof val === "object") {
@@ -228,16 +227,7 @@ const _sfc_main = defineComponent({
         checkedExceptions.value = new Set(val.exceptions || []);
       }
     }, { immediate: true });
-    const virtualListKey = ref(0);
-    const virtualListRef = ref();
-    function updateVirtualListKey() {
-      var _a;
-      virtualListKey.value++;
-      (_a = virtualListRef.value) == null ? void 0 : _a.forceUpdate();
-    }
-    defineExpose({});
     return {
-      updateVirtualListKey,
       ns,
       panel,
       hoverZone,
