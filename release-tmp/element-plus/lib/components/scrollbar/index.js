@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var scrollbar$1 = require('./src/scrollbar2.js');
 var util = require('./src/util.js');
 var scrollbar = require('./src/scrollbar.js');
-var thumb = require('./src/thumb2.js');
+var thumb = require('./src/thumb.js');
 var constants = require('./src/constants.js');
 var install = require('../../utils/vue/install.js');
 

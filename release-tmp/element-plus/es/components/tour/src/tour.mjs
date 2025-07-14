@@ -1,7 +1,7 @@
 import { defineComponent, ref, computed, toRef, watch, useSlots, provide, openBlock, createElementBlock, Fragment, createVNode, unref, withCtx, createElementVNode, mergeProps, normalizeStyle, createBlock, renderSlot, createCommentVNode } from 'vue';
 import { useVModel } from '@vueuse/core';
 import { ElTeleport } from '../../teleport/index.mjs';
-import ElTourMask from './mask2.mjs';
+import ElTourMask from './mask.mjs';
 import ElTourContent from './content2.mjs';
 import ElTourSteps from './steps.mjs';
 import { tourProps, tourEmits } from './tour2.mjs';

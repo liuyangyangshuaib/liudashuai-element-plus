@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
 var index$2 = require('../../button/index.js');
-var dateTable = require('./date-table2.js');
+var dateTable = require('./date-table.js');
 var useCalendar = require('./use-calendar.js');
 var calendar = require('./calendar.js');
 var pluginVue_exportHelper = require('../../../_virtual/plugin-vue_export-helper.js');

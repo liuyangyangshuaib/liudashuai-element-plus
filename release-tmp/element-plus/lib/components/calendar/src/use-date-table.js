@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var dayjs = require('dayjs');
 var localeData = require('dayjs/plugin/localeData.js');
-var dateTable = require('./date-table.js');
+var dateTable = require('./date-table2.js');
 var date = require('../../../constants/date.js');
 var index = require('../../../hooks/use-locale/index.js');
 var utils = require('../../time-picker/src/utils.js');

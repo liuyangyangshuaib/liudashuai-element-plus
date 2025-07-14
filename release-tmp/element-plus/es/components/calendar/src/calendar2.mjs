@@ -1,6 +1,6 @@
 import { defineComponent, computed, openBlock, createElementBlock, normalizeClass, unref, createElementVNode, renderSlot, toDisplayString, createVNode, withCtx, createTextVNode, createCommentVNode, createSlots, normalizeProps, guardReactiveProps, Fragment, renderList, createBlock } from 'vue';
 import { ElButtonGroup, ElButton } from '../../button/index.mjs';
-import DateTable from './date-table2.mjs';
+import DateTable from './date-table.mjs';
 import { useCalendar } from './use-calendar.mjs';
 import { calendarProps, calendarEmits } from './calendar.mjs';
 import _export_sfc from '../../../_virtual/plugin-vue_export-helper.mjs';

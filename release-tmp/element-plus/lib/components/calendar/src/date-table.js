@@ -2,44 +2,98 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var utils = require('../../time-picker/src/utils.js');
-var runtime = require('../../../utils/vue/props/runtime.js');
-var shared = require('@vue/shared');
+var vue = require('vue');
+var dateTable = require('./date-table2.js');
+var useDateTable = require('./use-date-table.js');
+var pluginVue_exportHelper = require('../../../_virtual/plugin-vue_export-helper.js');
+var index = require('../../../hooks/use-namespace/index.js');
 
-const getPrevMonthLastDays = (date, count) => {
-  const lastDay = date.subtract(1, "month").endOf("month").date();
-  return utils.rangeArr(count).map((_, index) => lastDay - (count - index - 1));
-};
-const getMonthDays = (date) => {
-  const days = date.daysInMonth();
-  return utils.rangeArr(days).map((_, index) => index + 1);
-};
-const toNestedArr = (days) => utils.rangeArr(days.length / 7).map((index) => {
-  const start = index * 7;
-  return days.slice(start, start + 7);
+const __default__ = vue.defineComponent({
+  name: "DateTable"
 });
-const dateTableProps = runtime.buildProps({
-  selectedDay: {
-    type: runtime.definePropType(Object)
-  },
-  range: {
-    type: runtime.definePropType(Array)
-  },
-  date: {
-    type: runtime.definePropType(Object),
-    required: true
-  },
-  hideHeader: {
-    type: Boolean
+const _sfc_main = /* @__PURE__ */ vue.defineComponent({
+  ...__default__,
+  props: dateTable.dateTableProps,
+  emits: dateTable.dateTableEmits,
+  setup(__props, { expose, emit }) {
+    const props = __props;
+    const {
+      isInRange,
+      now,
+      rows,
+      weekDays,
+      getFormattedDate,
+      handlePickDay,
+      getSlotData
+    } = useDateTable.useDateTable(props, emit);
+    const nsTable = index.useNamespace("calendar-table");
+    const nsDay = index.useNamespace("calendar-day");
+    const getCellClass = ({ text, type }) => {
+      const classes = [type];
+      if (type === "current") {
+        const date = getFormattedDate(text, type);
+        if (date.isSame(props.selectedDay, "day")) {
+          classes.push(nsDay.is("selected"));
+        }
+        if (date.isSame(now, "day")) {
+          classes.push(nsDay.is("today"));
+        }
+      }
+      return classes;
+    };
+    expose({
+      getFormattedDate
+    });
+    return (_ctx, _cache) => {
+      return vue.openBlock(), vue.createElementBlock("table", {
+        class: vue.normalizeClass([vue.unref(nsTable).b(), vue.unref(nsTable).is("range", vue.unref(isInRange))]),
+        cellspacing: "0",
+        cellpadding: "0"
+      }, [
+        !_ctx.hideHeader ? (vue.openBlock(), vue.createElementBlock("thead", { key: 0 }, [
+          vue.createElementVNode("tr", null, [
+            (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(vue.unref(weekDays), (day) => {
+              return vue.openBlock(), vue.createElementBlock("th", {
+                key: day,
+                scope: "col"
+              }, vue.toDisplayString(day), 1);
+            }), 128))
+          ])
+        ])) : vue.createCommentVNode("v-if", true),
+        vue.createElementVNode("tbody", null, [
+          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(vue.unref(rows), (row, index) => {
+            return vue.openBlock(), vue.createElementBlock("tr", {
+              key: index,
+              class: vue.normalizeClass({
+                [vue.unref(nsTable).e("row")]: true,
+                [vue.unref(nsTable).em("row", "hide-border")]: index === 0 && _ctx.hideHeader
+              })
+            }, [
+              (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(row, (cell, key) => {
+                return vue.openBlock(), vue.createElementBlock("td", {
+                  key,
+                  class: vue.normalizeClass(getCellClass(cell)),
+                  onClick: ($event) => vue.unref(handlePickDay)(cell)
+                }, [
+                  vue.createElementVNode("div", {
+                    class: vue.normalizeClass(vue.unref(nsDay).b())
+                  }, [
+                    vue.renderSlot(_ctx.$slots, "date-cell", {
+                      data: vue.unref(getSlotData)(cell)
+                    }, () => [
+                      vue.createElementVNode("span", null, vue.toDisplayString(cell.text), 1)
+                    ])
+                  ], 2)
+                ], 10, ["onClick"]);
+              }), 128))
+            ], 2);
+          }), 128))
+        ])
+      ], 2);
+    };
   }
 });
-const dateTableEmits = {
-  pick: (value) => shared.isObject(value)
-};
+var DateTable = /* @__PURE__ */ pluginVue_exportHelper["default"](_sfc_main, [["__file", "date-table.vue"]]);
 
-exports.dateTableEmits = dateTableEmits;
-exports.dateTableProps = dateTableProps;
-exports.getMonthDays = getMonthDays;
-exports.getPrevMonthLastDays = getPrevMonthLastDays;
-exports.toNestedArr = toNestedArr;
+exports["default"] = DateTable;
 //# sourceMappingURL=date-table.js.map

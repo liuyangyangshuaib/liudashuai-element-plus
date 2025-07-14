@@ -1,9 +1,9 @@
 import { getCurrentInstance, shallowRef, ref, watch, onMounted } from 'vue';
 import { useEventListener } from '@vueuse/core';
 import { useFormDisabled } from '../../components/form/src/hooks/use-form-common-props.mjs';
+import { isElement } from '../../utils/types.mjs';
 import { isFocusable } from '../../utils/dom/aria.mjs';
 import { isFunction } from '@vue/shared';
-import { isElement } from '../../utils/types.mjs';
 
 function useFocusController(target, {
   beforeFocus,

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var helper = require('./helper.js');
-var input = require('../../input/src/input.js');
+var input = require('../../input/src/input2.js');
 var runtime = require('../../../utils/vue/props/runtime.js');
 var shared = require('@vue/shared');
 var event = require('../../../constants/event.js');

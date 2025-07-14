@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var core = require('@vueuse/core');
 var index$2 = require('../../teleport/index.js');
-var mask = require('./mask2.js');
+var mask = require('./mask.js');
 var content = require('./content2.js');
 var steps = require('./steps.js');
 var tour = require('./tour2.js');

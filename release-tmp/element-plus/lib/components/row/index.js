@@ -2,8 +2,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var row$1 = require('./src/row2.js');
-var row = require('./src/row.js');
+var row$1 = require('./src/row.js');
+var row = require('./src/row2.js');
 var constants = require('./src/constants.js');
 var install = require('../../utils/vue/install.js');
 

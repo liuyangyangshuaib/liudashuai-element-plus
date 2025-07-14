@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var content = require('../../tooltip/src/content2.js');
+var content = require('../../tooltip/src/content.js');
 var runtime = require('../../../utils/vue/props/runtime.js');
 var shared = require('@vue/shared');
 var index = require('../../../hooks/use-aria/index.js');

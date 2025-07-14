@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData.js';
-import { getPrevMonthLastDays, getMonthDays, toNestedArr } from './date-table.mjs';
+import { getPrevMonthLastDays, getMonthDays, toNestedArr } from './date-table2.mjs';
 import { WEEK_DAYS } from '../../../constants/date.mjs';
 import { useLocale } from '../../../hooks/use-locale/index.mjs';
 import { rangeArr } from '../../time-picker/src/utils.mjs';

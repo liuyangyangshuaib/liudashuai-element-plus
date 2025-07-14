@@ -1,4 +1,4 @@
-import { useTooltipContentProps } from '../../tooltip/src/content2.mjs';
+import { useTooltipContentProps } from '../../tooltip/src/content.mjs';
 import { buildProps, definePropType } from '../../../utils/vue/props/runtime.mjs';
 import { NOOP, isString, isObject } from '@vue/shared';
 import { useAriaProps } from '../../../hooks/use-aria/index.mjs';

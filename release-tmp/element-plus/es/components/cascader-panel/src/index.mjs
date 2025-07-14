@@ -249,25 +249,12 @@ const _sfc_main = defineComponent({
         console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
         return;
       }
-      const valueSet = new Set(values);
-      const filteredNodes = nodes.filter((node) => {
-        let parent = node.parent;
-        while (parent) {
-          if (valueSet.has(parent.value)) {
-            return false;
-          }
-          parent = parent.parent;
-        }
-        return true;
-      });
       function checkNodeRecursively(node) {
         node.doCheck(true);
-        if (!config.value.checkStrictly && node.children) {
-          node.children.forEach((child) => checkNodeRecursively(child));
-        }
       }
-      filteredNodes.forEach((node) => checkNodeRecursively(node));
-      calculateCheckedValue();
+      for (const node of nodes) {
+        checkNodeRecursively(node);
+      }
       menus.value = [...menus.value];
     }
     function removeNodeByValue(values) {
@@ -282,25 +269,12 @@ const _sfc_main = defineComponent({
         console.warn("\u672A\u627E\u5230\u5BF9\u5E94\u8282\u70B9");
         return;
       }
-      const valueSet = new Set(values);
-      const filteredNodes = nodes.filter((node) => {
-        let parent = node.parent;
-        while (parent) {
-          if (valueSet.has(parent.value)) {
-            return false;
-          }
-          parent = parent.parent;
-        }
-        return true;
-      });
       function checkNodeRecursively(node) {
         node.doCheck(false);
-        if (!config.value.checkStrictly && node.children) {
-          node.children.forEach((child) => checkNodeRecursively(child));
-        }
       }
-      filteredNodes.forEach((node) => checkNodeRecursively(node));
-      calculateCheckedValue();
+      for (const node of nodes) {
+        checkNodeRecursively(node);
+      }
       menus.value = [...menus.value];
     }
     provide(CASCADER_PANEL_INJECTION_KEY, reactive({

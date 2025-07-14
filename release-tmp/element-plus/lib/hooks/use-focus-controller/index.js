@@ -5,9 +5,9 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var core = require('@vueuse/core');
 var useFormCommonProps = require('../../components/form/src/hooks/use-form-common-props.js');
+var types = require('../../utils/types.js');
 var aria = require('../../utils/dom/aria.js');
 var shared = require('@vue/shared');
-var types = require('../../utils/types.js');
 
 function useFocusController(target, {
   beforeFocus,

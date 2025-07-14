@@ -39,7 +39,7 @@ const _sfc_main = vue.defineComponent({
       default: () => ({ allSelected: false, exceptions: [] })
     }
   },
-  setup(props, { emit }) {
+  setup(props) {
     const instance = vue.getCurrentInstance();
     const ns = index$3.useNamespace("cascader-menu");
     const { t } = index$4.useLocale();
@@ -48,128 +48,11 @@ const _sfc_main = vue.defineComponent({
     let hoverTimer = null;
     const panel = vue.inject(types.CASCADER_PANEL_INJECTION_KEY);
     const hoverZone = vue.ref(null);
-    const virtualListError = vue.ref(false);
-    const selectAllCache = vue.ref({
-      allNodes: /* @__PURE__ */ new Set(),
-      checkedNodes: /* @__PURE__ */ new Set(),
-      lastUpdateTime: 0,
-      nodeCount: 0,
-      checkedCount: 0
-    });
-    const selectAllDebounceTimer = vue.ref(null);
-    const isSelectAllProcessing = vue.ref(false);
     const isEmpty = vue.computed(() => !props.nodes.length);
     const isLoading = vue.computed(() => !panel.initialLoaded);
     const menuId = vue.computed(() => `${id.value}-${props.index}`);
-    const showSelectAll = vue.computed(() => panel.config.multiple && panel.config.showSelectAll);
-    const selectAllText = vue.computed(() => panel.config.selectAllText || t("el.cascader.selectAll"));
-    const selectableNodes = vue.computed(() => props.nodes.filter((node) => !node.isDisabled));
-    const checkedNodes = vue.computed(() => selectableNodes.value.filter((node) => node.checked));
-    const isAllSelected = vue.computed(() => selectableNodes.value.length > 0 && checkedNodes.value.length === selectableNodes.value.length);
-    const isIndeterminate = vue.computed(() => checkedNodes.value.length > 0 && checkedNodes.value.length < selectableNodes.value.length);
-    const isAllDisabled = vue.computed(() => selectableNodes.value.length === 0);
-    const isAllSelectedFlag = vue.ref(false);
-    const checkedExceptions = vue.ref(/* @__PURE__ */ new Set());
-    const selectedNodes = vue.ref(/* @__PURE__ */ new Set());
-    function isNodeChecked(nodeUid) {
-      if (isAllSelectedFlag.value) {
-        return !checkedExceptions.value.has(nodeUid);
-      } else {
-        return checkedExceptions.value.has(nodeUid);
-      }
-    }
-    function handleSelectAll(checked) {
-      isAllSelectedFlag.value = checked;
-      checkedExceptions.value.clear();
-      emitSelected();
-    }
-    function handleNodeCheck(nodeUid, checked) {
-      if (isAllSelectedFlag.value) {
-        if (!checked)
-          checkedExceptions.value.add(nodeUid);
-        else
-          checkedExceptions.value.delete(nodeUid);
-      } else {
-        if (checked)
-          checkedExceptions.value.add(nodeUid);
-        else
-          checkedExceptions.value.delete(nodeUid);
-      }
-      emitSelected();
-    }
-    function emitSelected() {
-      if (instance && instance.emit) {
-        instance.emit("update:modelValue", {
-          allSelected: isAllSelectedFlag.value,
-          exceptions: Array.from(checkedExceptions.value)
-        });
-      }
-    }
-    const updateSelectAllCache = () => {
-      const now = Date.now();
-      const cache = selectAllCache.value;
-      const currentNodes = selectableNodes.value;
-      if (cache.nodeCount === currentNodes.length && now - cache.lastUpdateTime < 200) {
-        return;
-      }
-      const allNodeIds = /* @__PURE__ */ new Set();
-      const checkedNodeIds = /* @__PURE__ */ new Set();
-      let checkedCount = 0;
-      const collectNodes = (nodes) => {
-        nodes.forEach((node) => {
-          allNodeIds.add(node.uid.toString());
-          if (node.checked) {
-            checkedNodeIds.add(node.uid.toString());
-            checkedCount++;
-          }
-          if (node.children && node.children.length > 0) {
-            collectNodes(node.children);
-          }
-        });
-      };
-      collectNodes(props.nodes);
-      cache.allNodes = allNodeIds;
-      cache.checkedNodes = checkedNodeIds;
-      cache.lastUpdateTime = now;
-      cache.nodeCount = currentNodes.length;
-      cache.checkedCount = checkedCount;
-    };
-    const batchSelectAll = async (checked) => {
-      if (isAllDisabled.value || isSelectAllProcessing.value)
-        return;
-      if (selectAllDebounceTimer.value) {
-        clearTimeout(selectAllDebounceTimer.value);
-        selectAllDebounceTimer.value = null;
-      }
-      selectAllDebounceTimer.value = window.setTimeout(async () => {
-        isSelectAllProcessing.value = true;
-        try {
-          updateSelectAllCache();
-          const nodesToProcess = selectableNodes.value;
-          if (nodesToProcess.length === 0)
-            return;
-          const batchSize = 200;
-          const totalBatches = Math.ceil(nodesToProcess.length / batchSize);
-          for (let i = 0; i < totalBatches; i++) {
-            const start = i * batchSize;
-            const end = Math.min(start + batchSize, nodesToProcess.length);
-            const batch = nodesToProcess.slice(start, end);
-            panel.batchCheckChange(batch, checked, i === totalBatches - 1);
-            if (i < totalBatches - 1) {
-              await new Promise((resolve) => requestAnimationFrame(resolve));
-            }
-          }
-        } finally {
-          isSelectAllProcessing.value = false;
-        }
-      }, 50);
-    };
-    const virtualListHeight = vue.computed(() => {
-      const baseHeight = 192;
-      return showSelectAll.value ? baseHeight - 34 : baseHeight;
-    });
-    const virtualItemSize = 34;
     const handleExpand = (e) => {
+      console.log(e.target, "e.target");
       activeNode = e.target;
     };
     const handleMouseMove = (e) => {
@@ -203,34 +86,23 @@ const _sfc_main = vue.defineComponent({
       hoverZone.value.innerHTML = "";
       clearHoverTimer();
     };
-    const handleVirtualListScroll = (e) => {
-      const target = e.target;
-      if (target && panel.isHoverMenu) {
-        clearHoverZone();
+    const showSelectAll = vue.computed(() => panel.config.multiple && panel.config.showSelectAll);
+    const selectAllText = vue.computed(() => panel.config.selectAllText || t("el.cascader.selectAll"));
+    const batchSelectAll = (checked) => {
+      const nodes = props.nodes;
+      for (const node of nodes) {
+        node.doCheck(checked);
       }
     };
-    const handleVirtualListError = () => {
-      virtualListError.value = true;
-    };
+    const isAllSelected = vue.computed(() => {
+      return props.nodes.every((node) => node.checked);
+    });
+    const isIndeterminate = vue.computed(() => {
+      return props.nodes.some((node) => node.checked) && !props.nodes.every((node) => node.checked);
+    });
     const handleSelectAllChange = (checked) => {
-      if (isAllDisabled.value)
-        return;
       batchSelectAll(checked);
     };
-    vue.onBeforeUnmount(() => {
-      if (selectAllDebounceTimer.value) {
-        clearTimeout(selectAllDebounceTimer.value);
-        selectAllDebounceTimer.value = null;
-      }
-    });
-    function logRenderNode(nodeUid) {
-    }
-    vue.watch(() => props.modelValue, (val) => {
-      if (val && typeof val === "object") {
-        isAllSelectedFlag.value = !!val.allSelected;
-        checkedExceptions.value = new Set(val.exceptions || []);
-      }
-    }, { immediate: true });
     return {
       ns,
       panel,
@@ -242,33 +114,19 @@ const _sfc_main = vue.defineComponent({
       handleExpand,
       handleMouseMove,
       clearHoverZone,
-      virtualListHeight,
-      virtualItemSize,
-      handleVirtualListScroll,
-      virtualListError,
-      handleVirtualListError,
-      showSelectAll,
-      selectAllText,
-      selectableNodes,
-      checkedNodes,
+      handleSelectAllChange,
       isAllSelected,
       isIndeterminate,
-      isAllDisabled,
-      handleSelectAll,
-      handleSelectAllChange,
-      isSelectAllProcessing,
-      isNodeChecked,
-      handleNodeCheck,
-      logRenderNode,
-      selectedNodes
+      showSelectAll,
+      selectAllText
     };
   }
 });
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_loading = vue.resolveComponent("loading");
-  const _component_el_icon = vue.resolveComponent("el-icon");
   const _component_el_checkbox = vue.resolveComponent("el-checkbox");
   const _component_el_cascader_node = vue.resolveComponent("el-cascader-node");
+  const _component_loading = vue.resolveComponent("loading");
+  const _component_el_icon = vue.resolveComponent("el-icon");
   const _component_el_scrollbar = vue.resolveComponent("el-scrollbar");
   return vue.openBlock(), vue.createBlock(_component_el_scrollbar, {
     key: _ctx.menuId,
@@ -286,57 +144,32 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         vue.createCommentVNode(" \u5168\u9009\u6309\u94AE "),
         _ctx.showSelectAll ? (vue.openBlock(), vue.createElementBlock("div", {
           key: 0,
-          class: vue.normalizeClass(_ctx.ns.e("select-all")),
-          onClick: _ctx.handleSelectAll
+          class: vue.normalizeClass(_ctx.ns.e("select-all"))
         }, [
           vue.createVNode(_component_el_checkbox, {
             "model-value": _ctx.isAllSelected,
             indeterminate: _ctx.isIndeterminate,
-            disabled: _ctx.isAllDisabled || _ctx.isSelectAllProcessing,
             onClick: vue.withModifiers(() => {
             }, ["stop"]),
             "onUpdate:modelValue": _ctx.handleSelectAllChange
           }, {
             default: vue.withCtx(() => [
-              _ctx.isSelectAllProcessing ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 0 }, [
-                vue.createVNode(_component_el_icon, {
-                  size: "14",
-                  class: vue.normalizeClass(_ctx.ns.is("loading"))
-                }, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_loading)
-                  ]),
-                  _: 1
-                }, 8, ["class"]),
-                vue.createTextVNode(" " + vue.toDisplayString(_ctx.t("el.cascader.processing")), 1)
-              ], 64)) : (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 1 }, [
-                vue.createTextVNode(vue.toDisplayString(_ctx.selectAllText), 1)
-              ], 64))
+              vue.createTextVNode(vue.toDisplayString(_ctx.selectAllText), 1)
             ]),
             _: 1
-          }, 8, ["model-value", "indeterminate", "disabled", "onClick", "onUpdate:modelValue"])
-        ], 10, ["onClick"])) : vue.createCommentVNode("v-if", true),
-        vue.createCommentVNode(` <FixedSizeList v-if="!isLoading && !isEmpty && !virtualListError" :height="virtualListHeight"
-      :item-size="virtualItemSize" :data="nodes" :total="nodes.length"
-      :class="[ns.e('virtual-list'), 'cascader-virtual-list']" :scrollbar-always-on="false"
-      @scroll="handleVirtualListScroll" :use-is-scrolling="false" :perf-mode="true" container-element="div"
-      inner-element="div" role="listbox" :aria-label="t('el.cascader.options')" @error="handleVirtualListError"
-      ref="virtualListRef">
-      <template #default="{ data, index, style }" :key="virtualListKey">
-      </template>
-    </FixedSizeList> `),
+          }, 8, ["model-value", "indeterminate", "onClick", "onUpdate:modelValue"])
+        ], 2)) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(" :onVnodeMounted \u4E3A\u4EC0\u4E48\u8981\u6DFB\u52A0\u8FD9\u4E2A\u4EE3\u7801? \n     1. index\u7684addNodeByValue \u548CremoveNodeByValue \u4E2D \u4F7F\u7528\u7684\u662Fdocheck \n     docheck \u5E76\u4E0D\u4F1A\u89E6\u53D1\u6570\u636E\u7684\u54CD\u5E94\u5F0F\u4F9D\u8D56 vue\u76D1\u542C\u4E0D\u5230  \u6240\u4EE5\u5728\u8FD9\u91CC\u6DFB\u52A0\u94A9\u5B50 \u642D\u914Dlist\u4E2D\u7684 menus.value = [...menus.value] \n     \u80FD\u5F3A\u5236\u66F4\u65B0\u89C6\u56FE \u4F46\u662F \u6027\u80FD\u4F1A\u4E0B\u964D "),
         (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.nodes, (node) => {
           return vue.openBlock(), vue.createBlock(_component_el_cascader_node, {
             key: node.uid,
             node,
             "menu-id": _ctx.menuId,
             onExpand: _ctx.handleExpand,
-            onCheck: _ctx.handleNodeCheck,
-            checked: _ctx.isNodeChecked(node.uid),
-            onVnodeMounted: () => _ctx.logRenderNode(node.uid)
-          }, null, 8, ["node", "menu-id", "onExpand", "onCheck", "checked", "onVnodeMounted"]);
+            onVnodeMounted: () => {
+            }
+          }, null, 8, ["node", "menu-id", "onExpand", "onVnodeMounted"]);
         }), 128)),
-        vue.createCommentVNode(' <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"\n        :onVnodeMounted="() => logRenderNode(node.uid)" /> '),
         _ctx.isLoading ? (vue.openBlock(), vue.createElementBlock("div", {
           key: 1,
           class: vue.normalizeClass(_ctx.ns.e("empty-text"))
@@ -351,14 +184,30 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1
           }, 8, ["class"]),
           vue.createTextVNode(" " + vue.toDisplayString(_ctx.t("el.cascader.loading")), 1)
-        ], 2)) : _ctx.isEmpty ? (vue.openBlock(), vue.createElementBlock("div", {
+        ], 2)) : vue.createCommentVNode("v-if", true),
+        vue.createCommentVNode(' <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"\n        :onVnodeMounted="() => logRenderNode(node.uid)" /> '),
+        _ctx.isLoading ? (vue.openBlock(), vue.createElementBlock("div", {
           key: 2,
+          class: vue.normalizeClass(_ctx.ns.e("empty-text"))
+        }, [
+          vue.createVNode(_component_el_icon, {
+            size: "14",
+            class: vue.normalizeClass(_ctx.ns.is("loading"))
+          }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(_component_loading)
+            ]),
+            _: 1
+          }, 8, ["class"]),
+          vue.createTextVNode(" " + vue.toDisplayString(_ctx.t("el.cascader.loading")), 1)
+        ], 2)) : _ctx.isEmpty ? (vue.openBlock(), vue.createElementBlock("div", {
+          key: 3,
           class: vue.normalizeClass(_ctx.ns.e("empty-text"))
         }, [
           vue.renderSlot(_ctx.$slots, "empty", {}, () => [
             vue.createTextVNode(vue.toDisplayString(_ctx.t("el.cascader.noData")), 1)
           ])
-        ], 2)) : ((_a = _ctx.panel) == null ? void 0 : _a.isHoverMenu) ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 3 }, [
+        ], 2)) : ((_a = _ctx.panel) == null ? void 0 : _a.isHoverMenu) ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 4 }, [
           vue.createCommentVNode(" eslint-disable-next-line vue/html-self-closing "),
           (vue.openBlock(), vue.createElementBlock("svg", {
             ref: "hoverZone",
