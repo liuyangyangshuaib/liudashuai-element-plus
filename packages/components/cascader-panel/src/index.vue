@@ -350,7 +350,6 @@ export default defineComponent({
           break
       }
     }
-
     function addNodeByValue(values: CascaderNodeValue[]) {
       if (!store) return
       if (!Array.isArray(values)) {
@@ -362,32 +361,16 @@ export default defineComponent({
         console.warn('未找到对应节点')
         return
       }
-
-      // 过滤掉被其他节点包含的子节点，只保留最顶层（父）节点
-      const valueSet = new Set(values)
-      const filteredNodes = nodes.filter(node => {
-        let parent = node.parent
-        while (parent) {
-          if (valueSet.has(parent.value)) {
-            return false // 如果父节点也在 values 中，则跳过该子节点
-          }
-          parent = parent.parent
-        }
-        return true
-      })
-
       function checkNodeRecursively(node: CascaderNode) {
         node.doCheck(true)
-        if (!config.value.checkStrictly && node.children) {
-          node.children.forEach(child => checkNodeRecursively(child))
-        }
       }
-      filteredNodes.forEach(node => checkNodeRecursively(node))
-
-      calculateCheckedValue()
-      menus.value = [...menus.value] // 强制更新
+      for (const node of nodes) {
+        checkNodeRecursively(node)
+      }
+      // values.forEach(node => checkNodeRecursively(node))
+      menus.value = [...menus.value] // 搭配onVnodeMounted  强制更新视图
     }
-    function removeNodeByValue(values: CascaderNodeValue) {
+    function removeNodeByValue(values: CascaderNodeValue[]) {
       if (!store) return
       if (!Array.isArray(values)) {
         console.warn('参数必须为数组')
@@ -398,30 +381,14 @@ export default defineComponent({
         console.warn('未找到对应节点')
         return
       }
-
-      // 过滤掉被其他节点包含的子节点，只保留最顶层（父）节点
-      const valueSet = new Set(values)
-      const filteredNodes = nodes.filter(node => {
-        let parent = node.parent
-        while (parent) {
-          if (valueSet.has(parent.value)) {
-            return false // 如果父节点也在 values 中，则跳过该子节点
-          }
-          parent = parent.parent
-        }
-        return true
-      })
-
       function checkNodeRecursively(node: CascaderNode) {
         node.doCheck(false)
-        if (!config.value.checkStrictly && node.children) {
-          node.children.forEach(child => checkNodeRecursively(child))
-        }
       }
-      filteredNodes.forEach(node => checkNodeRecursively(node))
-
-      calculateCheckedValue()
-      menus.value = [...menus.value] // 强制更新
+      for (const node of nodes) {
+        checkNodeRecursively(node)
+      }
+      // values.forEach(node => checkNodeRecursively(node))
+      menus.value = [...menus.value] // 搭配onVnodeMounted  强制更新视图
     }
 
     provide(
