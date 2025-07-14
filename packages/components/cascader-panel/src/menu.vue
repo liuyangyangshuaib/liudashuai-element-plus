@@ -98,7 +98,6 @@ export default defineComponent({
     const menuId = computed(() => `${id.value}-${props.index}`)
 
     const handleExpand = (e: MouseEvent) => {
-      console.log(e.target, 'e.target')
       activeNode = e.target as HTMLElement
     }
 
@@ -150,6 +149,7 @@ export default defineComponent({
       for (const node of nodes) {
         node.doCheck(checked)
       }
+      panel.triggerCheckChange() // 这里的函数名以实际为准
     }
     const isAllSelected = computed(() => {
       return props.nodes.every(node => node.checked)

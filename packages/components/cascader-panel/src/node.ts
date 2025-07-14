@@ -46,8 +46,6 @@ export interface CascaderProps {
   disabled?: string | isDisabled
   leaf?: string | isLeaf
   hoverThreshold?: number
-  showSelectAll?: boolean
-  selectAllText?: string
 }
 
 export type Nullable<T> = null | T
@@ -171,6 +169,7 @@ class Node {
   }
 
   broadcast(event: string, ...args: unknown[]) {
+    // console.log(this.children, 'this.children')
     const handlerName = `onParent${capitalize(event)}`
     this.children.forEach((child) => {
       if (child) {

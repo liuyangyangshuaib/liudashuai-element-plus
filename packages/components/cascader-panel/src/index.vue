@@ -367,6 +367,7 @@ export default defineComponent({
       for (const node of nodes) {
         checkNodeRecursively(node)
       }
+      calculateCheckedValue()
       // values.forEach(node => checkNodeRecursively(node))
       menus.value = [...menus.value] // 搭配onVnodeMounted  强制更新视图
     }
@@ -388,7 +389,14 @@ export default defineComponent({
         checkNodeRecursively(node)
       }
       // values.forEach(node => checkNodeRecursively(node))
+      calculateCheckedValue()
       menus.value = [...menus.value] // 搭配onVnodeMounted  强制更新视图
+    }
+
+    // 手动触发
+    function triggerCheckChange() {
+      calculateCheckedValue()
+      emit(CHANGE_EVENT, checkedNodes.value)
     }
 
     provide(
@@ -404,6 +412,7 @@ export default defineComponent({
         expandNode,
         handleCheckChange,
         batchCheckChange,
+        triggerCheckChange,
       })
     )
 
@@ -436,6 +445,7 @@ export default defineComponent({
     onBeforeUpdate(() => (menuList.value = []))
 
     onMounted(() => !isEmpty(props.modelValue) && syncCheckedValue())
+
 
     return {
       addNodeByValue, // 暴露方法
