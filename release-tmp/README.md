@@ -1,12 +1,13 @@
 # LiuDashuai Element Plus
 
-
 更新日志
- - 1.0.7 修复全选无法触发change事件
- - 1.0.6 精简代码, 性能优化
- - 1.0.4 无用代码删除, 子节点删除操作使用数组
- - 1.0.3 addNodeByValue进行调整 改用传入数组的入参  发现虚拟列表组件加的没什么吊用 
- - 1.0.2 添加了addNodeByValue 和 removeNodeByValue 方法  用于外部组件操作
+
+- 1.0.8 更改选择框 suffix
+- 1.0.7 修复全选无法触发 change 事件
+- 1.0.6 精简代码, 性能优化
+- 1.0.4 无用代码删除, 子节点删除操作使用数组
+- 1.0.3 addNodeByValue 进行调整 改用传入数组的入参
+- 1.0.2 添加了 addNodeByValue 和 removeNodeByValue 方法 用于外部组件操作
 
 这是一个基于 [Element Plus](https://element-plus.org/) 的定制化 Vue 3 组件库。
 
@@ -14,7 +15,7 @@
 
 - **级联选择器优化**: 对 `cascader-panel` 组件进行了性能优化，包括：
   - 添加了全选功能
-  - 添加了addNodeByValue removeNodeByValue方法 可以直接操作组件 增加选择节点和删除节点
+  - 添加了 addNodeByValue removeNodeByValue 方法 可以直接操作组件 增加选择节点和删除节点
 
 ## 安装
 

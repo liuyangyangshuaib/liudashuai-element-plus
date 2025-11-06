@@ -12,7 +12,7 @@ import {
   iconPropType,
 } from '@element-plus/utils'
 import { useTooltipContentProps } from '@element-plus/components/tooltip'
-import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
+import {  CircleClose, CaretBottom } from '@element-plus/icons-vue'
 import { tagProps } from '@element-plus/components/tag'
 import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@element-plus/constants'
 
@@ -204,7 +204,7 @@ export const selectProps = buildProps({
    */
   suffixIcon: {
     type: iconPropType,
-    default: ArrowDown,
+    default: CaretBottom,
   },
   /**
    * @description tag type

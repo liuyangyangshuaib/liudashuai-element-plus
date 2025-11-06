@@ -111,11 +111,15 @@
   }
 
   @include e(caret) {
-    color: getCssVar('select-input-color');
-    font-size: getCssVar('select-input-font-size');
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 8px solid getCssVar('select-input-color');
     transition: getCssVar('transition', 'duration');
     transform: rotateZ(0deg);
     cursor: pointer;
+    flex-shrink: 0;
 
     @include when(reverse) {
       transform: rotateZ(180deg);
