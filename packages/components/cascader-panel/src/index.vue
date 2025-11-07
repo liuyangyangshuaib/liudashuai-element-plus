@@ -1,7 +1,15 @@
 <template>
-  <div :class="[ns.b('panel'), ns.is('bordered', border)]" @keydown="handleKeyDown">
-    <el-cascader-menu v-for="(menu, index) in menus" :key="index" :ref="(item) => (menuList[index] = item)"
-      :index="index" :nodes="[...menu]">
+  <div
+    :class="[ns.b('panel'), ns.is('bordered', border)]"
+    @keydown="handleKeyDown"
+  >
+    <el-cascader-menu
+      v-for="(menu, index) in menus"
+      :key="index"
+      :ref="(item) => (menuList[index] = item)"
+      :index="index"
+      :nodes="[...menu]"
+    >
       <template #empty>
         <slot name="empty" />
       </template>
@@ -180,7 +188,7 @@ export default defineComponent({
       manualChecked = true
 
       // 批量设置节点状态，避免重复计算
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         if (node.checked !== checked) {
           if (checkStrictly || !multiple) {
             node.checked = checked
@@ -353,12 +361,12 @@ export default defineComponent({
     function addNodeByValue(values: CascaderNodeValue[]) {
       if (!store) return
       if (!Array.isArray(values)) {
-        console.warn('参数必须为数组')
         return
       }
-      const nodes = values.map(value => store.getNodeByValue(value)).filter(Boolean)
+      const nodes = values
+        .map((value) => store.getNodeByValue(value))
+        .filter(Boolean)
       if (nodes.length === 0) {
-        console.warn('未找到对应节点')
         return
       }
       function checkNodeRecursively(node: CascaderNode) {
@@ -374,12 +382,12 @@ export default defineComponent({
     function removeNodeByValue(values: CascaderNodeValue[]) {
       if (!store) return
       if (!Array.isArray(values)) {
-        console.warn('参数必须为数组')
         return
       }
-      const nodes = values.map(value => store.getNodeByValue(value)).filter(Boolean)
+      const nodes = values
+        .map((value) => store.getNodeByValue(value))
+        .filter(Boolean)
       if (nodes.length === 0) {
-        console.warn('未找到对应节点')
         return
       }
       function checkNodeRecursively(node: CascaderNode) {
@@ -397,6 +405,11 @@ export default defineComponent({
     function triggerCheckChange() {
       calculateCheckedValue()
       emit(CHANGE_EVENT, checkedNodes.value)
+    }
+
+    // 添加单个节点（通过值）
+    function addNode(val: string | CascaderNodeValue) {
+      addNodeByValue([val])
     }
 
     provide(
@@ -446,10 +459,10 @@ export default defineComponent({
 
     onMounted(() => !isEmpty(props.modelValue) && syncCheckedValue())
 
-
     return {
       addNodeByValue, // 暴露方法
       removeNodeByValue, // 暴露方法
+      addNode, // 暴露方法（单个节点）
       ns,
       menuList,
       menus,

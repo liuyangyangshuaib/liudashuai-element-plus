@@ -17,7 +17,7 @@ export const generateTypesDefinitions = async () => {
 
   // Generate .d.ts files
   await run(
-    'npx vue-tsc -p tsconfig.web.json --declaration --emitDeclarationOnly --declarationDir dist/types'
+    'npx vue-tsc -p tsconfig.web.json --declaration --emitDeclarationOnly --declarationDir dist/types --skipLibCheck'
   )
 
   // Rollup all .d.ts files into index.d.ts

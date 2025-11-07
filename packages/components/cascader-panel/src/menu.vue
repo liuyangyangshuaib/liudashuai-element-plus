@@ -1,10 +1,22 @@
 <template>
-  <el-scrollbar :key="menuId" tag="ul" role="menu" :class="ns.b()" :wrap-class="ns.e('wrap')"
-    :view-class="[ns.e('list'), ns.is('empty', isEmpty)]" @mousemove="handleMouseMove" @mouseleave="clearHoverZone">
+  <el-scrollbar
+    :key="menuId"
+    tag="ul"
+    role="menu"
+    :class="ns.b()"
+    :wrap-class="ns.e('wrap')"
+    :view-class="[ns.e('list'), ns.is('empty', isEmpty)]"
+    @mousemove="handleMouseMove"
+    @mouseleave="clearHoverZone"
+  >
     <!-- 全选按钮 -->
     <div v-if="showSelectAll" :class="ns.e('select-all')">
-      <el-checkbox :model-value="isAllSelected" :indeterminate="isIndeterminate" @click.stop
-        @update:model-value="handleSelectAllChange">
+      <el-checkbox
+        :model-value="isAllSelected"
+        :indeterminate="isIndeterminate"
+        @click.stop
+        @update:model-value="handleSelectAllChange"
+      >
         {{ selectAllText }}
       </el-checkbox>
     </div>
@@ -13,8 +25,14 @@
      1. index的addNodeByValue 和removeNodeByValue 中 使用的是docheck 
      docheck 并不会触发数据的响应式依赖 vue监听不到  所以在这里添加钩子 搭配list中的 menus.value = [...menus.value] 
      能强制更新视图 但是 性能会下降 -->
-    <el-cascader-node v-for="node in nodes" :key="node.uid" :node="node" :menu-id="menuId" @expand="handleExpand"
-      :onVnodeMounted="() => { }" />
+    <el-cascader-node
+      v-for="node in nodes"
+      :key="node.uid"
+      :node="node"
+      :menu-id="menuId"
+      @expand="handleExpand"
+      :onVnodeMounted="() => {}"
+    />
     <div v-if="isLoading" :class="ns.e('empty-text')">
       <el-icon size="14" :class="ns.is('loading')">
         <loading />
@@ -33,12 +51,16 @@
       <slot name="empty">{{ t('el.cascader.noData') }}</slot>
     </div>
     <!-- eslint-disable-next-line vue/html-self-closing -->
-    <svg v-else-if="panel?.isHoverMenu" ref="hoverZone" :class="ns.e('hover-zone')"></svg>
+    <svg
+      v-else-if="panel?.isHoverMenu"
+      ref="hoverZone"
+      :class="ns.e('hover-zone')"
+    ></svg>
   </el-scrollbar>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, inject, ref, onBeforeUnmount, watch, defineExpose } from 'vue'
+import { computed, defineComponent, getCurrentInstance, inject, ref } from 'vue'
 import ElScrollbar from '@element-plus/components/scrollbar'
 import { useId, useLocale, useNamespace } from '@element-plus/hooks'
 import { Loading } from '@element-plus/icons-vue'
@@ -46,7 +68,6 @@ import ElIcon from '@element-plus/components/icon'
 import ElCascaderNode from './node.vue'
 import ElCheckbox from '@element-plus/components/checkbox'
 import { CASCADER_PANEL_INJECTION_KEY } from './types'
-import { FixedSizeList } from '@element-plus/components/virtual-list'
 
 import type { default as CascaderNode } from './node'
 import type { PropType } from 'vue'
@@ -61,7 +82,6 @@ export default defineComponent({
     ElIcon,
     ElScrollbar,
     ElCascaderNode,
-    FixedSizeList,
     ElCheckbox,
   },
 
@@ -138,11 +158,13 @@ export default defineComponent({
       clearHoverTimer()
     }
 
-
-
     // 全选相关计算属性
-    const showSelectAll = computed(() => panel.config.multiple && panel.config.showSelectAll)
-    const selectAllText = computed(() => panel.config.selectAllText || t('el.cascader.selectAll'))
+    const showSelectAll = computed(
+      () => panel.config.multiple && panel.config.showSelectAll
+    )
+    const selectAllText = computed(
+      () => panel.config.selectAllText || t('el.cascader.selectAll')
+    )
 
     const batchSelectAll = (checked: boolean) => {
       const nodes = props.nodes
@@ -152,16 +174,17 @@ export default defineComponent({
       panel.triggerCheckChange() // 这里的函数名以实际为准
     }
     const isAllSelected = computed(() => {
-      return props.nodes.every(node => node.checked)
+      return props.nodes.every((node) => node.checked)
     })
     const isIndeterminate = computed(() => {
-      return props.nodes.some(node => node.checked) && !props.nodes.every(node => node.checked)
+      return (
+        props.nodes.some((node) => node.checked) &&
+        !props.nodes.every((node) => node.checked)
+      )
     })
     const handleSelectAllChange = (checked: CheckboxValueType) => {
       batchSelectAll(checked as boolean)
     }
-
-
 
     // function logRenderNode(nodeUid: string) {
     // 这里只做简单打印，实际可统计渲染次数

@@ -46,6 +46,8 @@ export interface CascaderProps {
   disabled?: string | isDisabled
   leaf?: string | isLeaf
   hoverThreshold?: number
+  showSelectAll?: boolean
+  selectAllText?: string
 }
 
 export type Nullable<T> = null | T

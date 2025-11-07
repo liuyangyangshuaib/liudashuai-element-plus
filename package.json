@@ -41,7 +41,8 @@
     "prepare": "husky",
     "postinstall": "pnpm stub && concurrently \"pnpm gen:version\" \"pnpm run -C internal/metadata dev\"",
     "prepublishOnly": "pnpm run clean && pnpm run build",
-    "publish:package": "pnpm publish --access public"
+    "publish:package": "pnpm publish --access public",
+    "publish": "cd dist/element-plus && npm publish --ignore-scripts"
   },
   "peerDependencies": {
     "vue": "^3.2.0"
@@ -144,7 +145,6 @@
   },
   "lint-staged": {
     "*.{vue,js,ts,jsx,tsx,md,json}": [
-      "eslint --fix",
       "prettier --write"
     ]
   }

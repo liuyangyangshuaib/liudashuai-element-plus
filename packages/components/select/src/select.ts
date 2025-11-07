@@ -12,7 +12,7 @@ import {
   iconPropType,
 } from '@element-plus/utils'
 import { useTooltipContentProps } from '@element-plus/components/tooltip'
-import {  CircleClose, CaretBottom } from '@element-plus/icons-vue'
+import { CircleClose, CaretBottom } from '@element-plus/icons-vue'
 import { tagProps } from '@element-plus/components/tag'
 import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@element-plus/constants'
 
@@ -231,14 +231,14 @@ export const selectProps = buildProps({
    */
   showArrow: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   /**
    * @description offset of the dropdown
    */
   offset: {
     type: Number,
-    default: 12,
+    default: 3,
   },
   /**
    * @description position of dropdown

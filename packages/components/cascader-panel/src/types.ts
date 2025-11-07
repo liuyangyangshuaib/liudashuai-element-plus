@@ -57,6 +57,7 @@ export interface ElCascaderPanelContext {
     checked: boolean,
     emitClose?: boolean
   ) => void
+  triggerCheckChange: () => void
 }
 
 export const CASCADER_PANEL_INJECTION_KEY: InjectionKey<ElCascaderPanelContext> =

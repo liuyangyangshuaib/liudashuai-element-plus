@@ -113,8 +113,18 @@ export function copyThemeChalkSource() {
   )
 }
 
+/**
+ * copy assets to dist folder
+ */
+export function copyThemeChalkAssets() {
+  return src(path.resolve(__dirname, 'src/assets/**'))
+    .pipe(dest(path.resolve(distFolder, 'assets')))
+    .pipe(dest(path.resolve(distBundle, 'assets')))
+}
+
 export const build: TaskFunction = parallel(
   copyThemeChalkSource,
+  copyThemeChalkAssets,
   series(buildThemeChalk, buildDarkCssVars, copyThemeChalkBundle)
 )
 

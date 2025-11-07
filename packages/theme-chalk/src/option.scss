@@ -28,7 +28,7 @@ $checked-icon: "data:image/svg+xml;utf8,%3Csvg class='icon' width='200' height='
   @include e(item) {
     font-size: map.get($select, 'font-size');
     // 20 as the padding of option item, 12 as the size of ✓ icon size
-    padding: 0 #{20 + 12}px 0 20px;
+    padding: 0 8px;
     position: relative;
     white-space: nowrap;
     overflow: hidden;
@@ -38,9 +38,11 @@ $checked-icon: "data:image/svg+xml;utf8,%3Csvg class='icon' width='200' height='
     line-height: map.get($select-option, 'height');
     box-sizing: border-box;
     cursor: pointer;
+    font-weight: 400;
 
     @include when(hovering) {
-      background-color: map.get($select-option, 'hover-background');
+      background-color:  #E7E8EC;
+      font-weight: 500;
     }
 
     @include when(selected) {
