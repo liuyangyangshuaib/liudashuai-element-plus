@@ -34,7 +34,6 @@
             nsSelect.e('wrapper'),
             nsSelect.is('focused', isFocused),
             nsSelect.is('hovering', states.inputHovering),
-            nsSelect.is('filterable', filterable),
             nsSelect.is('disabled', selectDisabled),
           ]"
           @click.prevent="toggleMenu"
@@ -142,72 +141,26 @@
                 </template>
               </el-tooltip>
             </slot>
+
+            <!-- 单选：始终用专门区域展示已选 label，不受 inputValue 影响 -->
             <div
-              :class="[
-                nsSelect.e('selected-item'),
-                nsSelect.e('input-wrapper'),
-                nsSelect.is('hidden', !filterable),
-              ]"
+              v-if="!multiple && hasModelValue"
+              :class="nsSelect.e('selected-item')"
             >
-              <input
-                :id="inputId"
-                ref="inputRef"
-                v-model="states.inputValue"
-                type="text"
-                :name="name"
-                :class="[nsSelect.e('input'), nsSelect.is(selectSize)]"
-                :disabled="selectDisabled"
-                :autocomplete="autocomplete"
-                :style="inputStyle"
-                :tabindex="tabindex"
-                role="combobox"
-                :readonly="!filterable"
-                spellcheck="false"
-                :aria-activedescendant="hoverOption?.id || ''"
-                :aria-controls="contentId"
-                :aria-expanded="dropdownMenuVisible"
-                :aria-label="ariaLabel"
-                aria-autocomplete="none"
-                aria-haspopup="listbox"
-                @keydown.down.stop.prevent="navigateOptions('next')"
-                @keydown.up.stop.prevent="navigateOptions('prev')"
-                @keydown.esc.stop.prevent="handleEsc"
-                @keydown.enter.stop.prevent="selectOption"
-                @keydown.delete.stop="deletePrevTag"
-                @compositionstart="handleCompositionStart"
-                @compositionupdate="handleCompositionUpdate"
-                @compositionend="handleCompositionEnd"
-                @input="onInput"
-                @click.stop="toggleMenu"
-              />
-              <span
-                v-if="filterable"
-                ref="calculatorRef"
-                aria-hidden="true"
-                :class="nsSelect.e('input-calculator')"
-                v-text="states.inputValue"
-              />
+              <slot name="label" :label="selectedLabel" :value="modelValue">
+                <span>{{ selectedLabel }}</span>
+              </slot>
             </div>
+
             <div
-              v-if="shouldShowPlaceholder"
+              v-if="currentPlaceholder"
               :class="[
                 nsSelect.e('selected-item'),
                 nsSelect.e('placeholder'),
-                nsSelect.is(
-                  'transparent',
-                  !hasModelValue || (expanded && !states.inputValue)
-                ),
+                nsSelect.is('transparent', true),
               ]"
             >
-              <slot
-                v-if="hasModelValue"
-                name="label"
-                :label="currentPlaceholder"
-                :value="modelValue"
-              >
-                <span>{{ currentPlaceholder }}</span>
-              </slot>
-              <span v-else>{{ currentPlaceholder }}</span>
+              <span>{{ currentPlaceholder }}</span>
             </div>
           </div>
           <div ref="suffixRef" :class="nsSelect.e('suffix')">
@@ -243,6 +196,54 @@
             @click.stop
           >
             <slot name="header" />
+          </div>
+          <div
+            :class="[
+              nsSelect.e('selected-item'),
+              nsSelect.e('input-wrapper'),
+              nsSelect.is('hidden', !filterable),
+            ]"
+          >
+            <el-icon :class="nsSelect.e('search')">
+              <Search />
+            </el-icon>
+            <input
+              :id="inputId"
+              ref="inputRef"
+              v-model="states.inputValue"
+              type="text"
+              :name="name"
+              :class="[nsSelect.e('input'), nsSelect.is(selectSize)]"
+              :disabled="selectDisabled"
+              :autocomplete="autocomplete"
+              :style="inputStyle"
+              :tabindex="tabindex"
+              role="combobox"
+              :readonly="!filterable"
+              spellcheck="false"
+              :aria-activedescendant="hoverOption?.id || ''"
+              :aria-controls="contentId"
+              :aria-expanded="dropdownMenuVisible"
+              :aria-label="ariaLabel"
+              aria-autocomplete="none"
+              aria-haspopup="listbox"
+              @keydown.down.stop.prevent="navigateOptions('next')"
+              @keydown.up.stop.prevent="navigateOptions('prev')"
+              @keydown.esc.stop.prevent="handleEsc"
+              @keydown.enter.stop.prevent="selectOption"
+              @keydown.delete.stop="deletePrevTag"
+              @compositionstart="handleCompositionStart"
+              @compositionupdate="handleCompositionUpdate"
+              @compositionend="handleCompositionEnd"
+              @input="onInput"
+            />
+            <el-icon
+              v-if="clearIcon && states.inputValue"
+              :class="nsSelect.e('search-clear')"
+              @click.stop="() => (states.inputValue = '')"
+            >
+              <component :is="clearIcon" />
+            </el-icon>
           </div>
           <el-scrollbar
             v-show="states.options.size > 0 && !loading"
@@ -309,6 +310,7 @@ import { useSelect } from './useSelect'
 import { selectKey } from './token'
 import ElOptions from './options'
 import { selectProps } from './select'
+import { Search } from '@element-plus/icons-vue'
 
 import type { VNode } from 'vue';
 import type { SelectContext } from './type'
@@ -325,6 +327,7 @@ export default defineComponent({
     ElScrollbar,
     ElTooltip,
     ElIcon,
+    Search,
   },
   directives: { ClickOutside },
   props: selectProps,
@@ -369,6 +372,12 @@ export default defineComponent({
 
     const API = useSelect(_props, emit)
     const { calculatorRef, inputStyle } = useCalcInputWidth()
+
+    const { states, updateOptions } = API
+
+    const clearSearch = () => {
+      states.inputValue = ''
+    }
 
     const flatTreeSelectData = (data: any[]) => {
       return data.reduce((acc, item) => {
@@ -447,6 +456,7 @@ export default defineComponent({
       selectedLabel,
       calculatorRef,
       inputStyle,
+      clearSearch,
     }
   },
 })

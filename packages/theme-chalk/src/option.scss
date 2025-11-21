@@ -39,7 +39,7 @@ $checked-icon: "data:image/svg+xml;utf8,%3Csvg class='icon' width='200' height='
     box-sizing: border-box;
     cursor: pointer;
     font-weight: 400;
-
+    border-radius: 4px 4px 4px 4px;
     @include when(hovering) {
       background-color:  #E7E8EC;
       font-weight: 500;

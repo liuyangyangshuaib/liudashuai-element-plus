@@ -2,6 +2,8 @@
 
 更新日志
 
+- 1.1.2 dialog headerUI调整
+- 1.1.1 级联选择器下拉UI调整
 - 1.1.0 select 定制化调整
 - 1.0.8 更改选择框 suffix
 - 1.0.7 修复全选无法触发 change 事件
@@ -39,16 +41,6 @@ const app = createApp(App)
 app.use(LiuDashuaiElementPlus)
 app.mount('#app')
 ```
-
-## 与原版 Element Plus 的区别
-
-本版本在保持 Element Plus 原有功能的基础上，对级联选择器组件进行了以下增强：
-
-1. **全选功能**: 支持一键全选/取消全选当前层级的选项
-2. **虚拟滚动**: 当选项数量很大时，使用虚拟滚动提升性能
-3. **性能优化**: 针对大数据量场景进行了专门的性能优化
-4. **防抖处理**: 避免快速重复操作导致的性能问题
-
 ## 许可证
 
 MIT License - 基于 Element Plus 的 MIT 许可证

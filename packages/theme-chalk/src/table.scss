@@ -41,6 +41,7 @@
   }
 
   &.has-footer {
+
     &.#{$namespace}-table--scrollable-y,
     &.#{$namespace}-table--fluid-height {
       tr:last-child td.#{$namespace}-table__cell {
@@ -90,7 +91,7 @@
       transform: rotate(90deg);
     }
 
-    > .#{$namespace}-icon {
+    >.#{$namespace}-icon {
       font-size: 12px;
     }
   }
@@ -173,7 +174,7 @@
     }
 
     &.is-hidden {
-      > * {
+      >* {
         visibility: hidden;
       }
     }
@@ -228,11 +229,11 @@
   th.#{$namespace}-table__cell {
     background-color: getCssVar('table-header-bg-color');
 
-    > .cell.highlight {
+    >.cell.highlight {
       color: getCssVar('color-primary');
     }
 
-    &.required > div::before {
+    &.required>div::before {
       display: inline-block;
       content: '';
       width: 8px;
@@ -325,8 +326,10 @@
     width: 100%;
 
     tr {
+
       td,
       th {
+
         &.#{$namespace}-table-fixed-column--left,
         &.#{$namespace}-table-fixed-column--right {
           position: sticky !important;
@@ -377,6 +380,7 @@
 
     tr {
       th {
+
         &.#{$namespace}-table-fixed-column--left,
         &.#{$namespace}-table-fixed-column--right {
           background-color: getCssVar('table-header-bg-color');
@@ -411,7 +415,7 @@
 
   @include e((header-wrapper, body-wrapper)) {
     .#{$namespace}-table-column--selection {
-      > .cell {
+      >.cell {
         display: inline-flex;
         align-items: center;
         height: 23px;
@@ -480,8 +484,10 @@
   }
 
   @include when(scrolling-none) {
+
     .#{$namespace}-table-fixed-column--left,
     .#{$namespace}-table-fixed-column--right {
+
       &.is-first-column,
       &.is-last-column {
         &::before {
@@ -566,22 +572,24 @@
 
   @include e(body) {
     tr.hover-row {
+
       &,
       &.#{$namespace}-table__row--striped {
+
         &,
         &.current-row {
-          > td.#{$namespace}-table__cell {
+          >td.#{$namespace}-table__cell {
             background-color: getCssVar('table-row-hover-bg-color');
           }
         }
       }
     }
 
-    tr > td.hover-cell {
+    tr>td.hover-cell {
       background-color: getCssVar('table-row-hover-bg-color');
     }
 
-    tr.current-row > td.#{$namespace}-table__cell {
+    tr.current-row>td.#{$namespace}-table__cell {
       background-color: getCssVar('table-current-row-bg-color');
     }
   }
@@ -655,7 +663,7 @@
   }
 
   @include m(enable-row-hover) {
-    .#{$namespace}-table__body tr:hover > td.#{$namespace}-table__cell {
+    .#{$namespace}-table__body tr:hover>td.#{$namespace}-table__cell {
       background-color: getCssVar('table-row-hover-bg-color');
     }
   }
@@ -684,7 +692,7 @@
       border-right: none;
     }
 
-    > .#{$namespace}-table__inner-wrapper {
+    >.#{$namespace}-table__inner-wrapper {
       &::after {
         content: none;
       }

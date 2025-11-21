@@ -163,6 +163,8 @@
     display: flex;
     flex-wrap: wrap;
     user-select: none;
+    border-radius: 4px 4px 4px 4px;
+
   }
 
   @include e(tags-text) {
@@ -198,43 +200,7 @@
     );
   }
 
-  @include e(input-wrapper) {
-    flex: 1;
 
-    @include when(hidden) {
-      // Out of the document flow
-      position: absolute;
-      opacity: 0;
-      z-index: -1;
-    }
-  }
-
-  @include e(input) {
-    border: none;
-    outline: none;
-    padding: 0;
-    color: getCssVar('select-multiple-input-color');
-    font-size: inherit;
-    font-family: inherit;
-    appearance: none;
-    height: map.get($select-item-height, 'default');
-    width: 100%;
-    background-color: transparent;
-
-    @include when(disabled) {
-      cursor: not-allowed;
-    }
-  }
-
-  @include e(input-calculator) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    max-width: 100%;
-    visibility: hidden;
-    white-space: pre;
-    overflow: hidden;
-  }
 
   @each $size in (large, small) {
     @include m($size) {
@@ -267,4 +233,66 @@
       }
     }
   }
+    @include e(input-wrapper) {
+    flex: 1;
+    position: relative;
+
+    @include when(hidden) {
+      // Out of the document flow
+      position: absolute;
+      opacity: 0;
+      z-index: -1;
+    }
+  }
+
+  @include e(input) {
+    border: none;
+    outline: none;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #BABABA;
+    padding: 0 24px;
+    height: 32px;
+    color: getCssVar('select-multiple-input-color');
+    font-size: inherit;
+    font-family: inherit;
+    appearance: none;
+    height: map.get($select-item-height, 'default');
+    width: 100%;
+    background-color: transparent;
+    margin: 8px;
+    margin-bottom: 0;
+    position: relative;
+ 
+    &:focus {
+      border-color: #3169E9;
+    }
+
+    @include when(disabled) {
+      cursor: not-allowed;
+    }
+  }
+
+  @include e(search) {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    cursor: pointer;
+  }
+
+  @include e(search-clear) {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    cursor: pointer;
+  }
+
+  // @include e(input-calculator) {
+  //   position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   max-width: 100%;
+  //   visibility: hidden;
+  //   white-space: pre;
+  //   overflow: hidden;
+  // }
 }

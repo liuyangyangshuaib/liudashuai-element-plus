@@ -26,7 +26,7 @@
       }
     }
 
-    > span {
+    >span {
       flex: 1;
       line-height: normal;
       overflow: hidden;
@@ -43,7 +43,7 @@
       }
     }
 
-    & + input {
+    &+input {
       margin-left: 0;
     }
   }
@@ -93,20 +93,14 @@
     }
 
     .icon-circle-close:hover {
-      color: var(
-        #{getCssVarName('input', 'clear-hover-color')},
-        map.get($input, 'clear-hover-color')
-      );
+      color: var(#{getCssVarName('input', 'clear-hover-color')},
+        map.get($input, 'clear-hover-color'));
     }
 
     @include when(focus) {
       .#{$namespace}-input__wrapper {
-        box-shadow: 0 0 0 1px
-          var(
-            #{getCssVarName('input', 'focus-border-color')},
-            map.get($input, 'focus-border-color')
-          )
-          inset;
+        box-shadow: 0 0 0 1px var(#{getCssVarName('input', 'focus-border-color')},
+          map.get($input, 'focus-border-color')) inset;
       }
     }
   }
@@ -143,11 +137,9 @@
     font-size: getCssVar('cascader-menu-font-size');
     border-radius: getCssVar('cascader-menu-radius');
 
-    @include picker-popper(
-      getCssVar('cascader-menu-fill'),
+    @include picker-popper(getCssVar('cascader-menu-fill'),
       getCssVar('cascader-menu-border'),
-      getCssVar('cascader-menu-shadow')
-    );
+      getCssVar('cascader-menu-shadow'));
 
     &.#{$namespace}-popper {
       box-shadow: getCssVar('cascader-menu-shadow');
@@ -217,7 +209,7 @@
       font-weight: bold;
     }
 
-    > span {
+    >span {
       margin-right: 10px;
     }
   }
@@ -244,4 +236,20 @@
       color: transparent;
     }
   }
+
+  @include e(caret) {
+    width: 12px;
+    height: 12px;
+    background-image: url('./assets/caret-down.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    @include when(reverse) {
+      background-image: url('./assets/caret-down-active.png');
+    }
+  }
+
 }

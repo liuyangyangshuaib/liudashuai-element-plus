@@ -252,13 +252,22 @@ export const useSelect = (props: SelectProps, emit: SelectEmits) => {
   })
 
   const shouldShowPlaceholder = computed(() => {
+    // 多选：沿用原行为，只在“没有选中值 且 没有输入”时显示占位
     if (props.multiple && !isUndefined(props.modelValue)) {
       return ensureArray(props.modelValue).length === 0 && !states.inputValue
     }
+
+    // 单选：仅在“没有选中值 且 没有输入”时显示占位
     const value = isArray(props.modelValue)
       ? props.modelValue[0]
       : props.modelValue
-    return props.filterable || isUndefined(value) ? !states.inputValue : true
+
+    if (isUndefined(value)) {
+      return !states.inputValue
+    }
+
+    // 有选中值时，不再通过 placeholder 来展示，交给 selectedLabel 区域处理
+    return false
   })
 
   const currentPlaceholder = computed(() => {

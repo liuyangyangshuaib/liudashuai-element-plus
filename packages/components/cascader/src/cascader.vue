@@ -17,13 +17,12 @@
             <slot name="prefix" />
           </template>
           <template #suffix>
+
             <el-icon v-if="clearBtnVisible" key="clear" :class="[nsInput.e('icon'), 'icon-circle-close']"
               @click.stop="handleClear">
               <circle-close />
             </el-icon>
-            <el-icon v-else key="arrow-down" :class="cascaderIconKls" @click.stop="togglePopperVisible()">
-              <arrow-down />
-            </el-icon>
+            <div v-else :class="cascaderIconKls" @click.stop="togglePopperVisible()" />
           </template>
         </el-input>
 
@@ -134,7 +133,7 @@ import {
   EVENT_CODE,
   UPDATE_MODEL_EVENT,
 } from '@element-plus/constants'
-import { ArrowDown, Check, CircleClose } from '@element-plus/icons-vue'
+import { Check, CircleClose } from '@element-plus/icons-vue'
 import { cascaderEmits, cascaderProps } from './cascader'
 
 import type { Options } from '@element-plus/components/popper'
@@ -281,8 +280,7 @@ const cascaderKls = computed(() => {
 
 const cascaderIconKls = computed(() => {
   return [
-    nsInput.e('icon'),
-    'icon-arrow-down',
+    nsCascader.e('caret'),
     nsCascader.is('reverse', popperVisible.value),
   ]
 })
