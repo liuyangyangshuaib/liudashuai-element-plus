@@ -238,11 +238,11 @@
               @input="onInput"
             />
             <el-icon
-              v-if="clearIcon && states.inputValue"
+              v-if="states.inputValue"
               :class="nsSelect.e('search-clear')"
               @click.stop="() => (states.inputValue = '')"
             >
-              <component :is="clearIcon" />
+              <CircleCloseFilled />
             </el-icon>
           </div>
           <el-scrollbar
@@ -310,7 +310,7 @@ import { useSelect } from './useSelect'
 import { selectKey } from './token'
 import ElOptions from './options'
 import { selectProps } from './select'
-import { Search } from '@element-plus/icons-vue'
+import { Search, CircleCloseFilled } from '@element-plus/icons-vue'
 
 import type { VNode } from 'vue';
 import type { SelectContext } from './type'
@@ -328,6 +328,7 @@ export default defineComponent({
     ElTooltip,
     ElIcon,
     Search,
+    CircleCloseFilled,
   },
   directives: { ClickOutside },
   props: selectProps,

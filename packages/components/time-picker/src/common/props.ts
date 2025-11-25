@@ -104,6 +104,13 @@ export const timePickerDefaultProps = buildProps({
     default: '',
   },
   /**
+   * @description Custom prefix icon component
+   */
+  showOriginalPrefixIcon: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * @description size of Input
    */
   size: useSizeProp,

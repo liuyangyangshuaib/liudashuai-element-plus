@@ -20,3 +20,4 @@ import '@element-plus/theme-chalk/src/message.scss'
 
   app.mount('#play')
 })()
+

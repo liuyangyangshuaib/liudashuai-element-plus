@@ -58,22 +58,26 @@
       >
         <template #prefix>
           <el-icon
-            v-if="triggerIcon"
-            :class="nsInput.e('icon')"
-            @mousedown.prevent="onMouseDownInput"
-            @touchstart.passive="onTouchStartInput"
+            v-if="showOriginalPrefixIcon && triggerIcon"
+            :class="[nsInput.e('icon'), nsRange.e('icon')]"
           >
             <component :is="triggerIcon" />
           </el-icon>
+          <img
+            v-else
+            :src="pickerVisible ? dateAfterIconActive : dateAfterIconDefault"
+            alt=""
+            class="date-after-icon"
+          />
         </template>
         <template #suffix>
           <el-icon
-            v-if="showClose && clearIcon"
+            v-if="showClose"
             :class="`${nsInput.e('icon')} clear-icon`"
             @mousedown.prevent="NOOP"
             @click="onClearIconClick"
           >
-            <component :is="clearIcon" />
+            <CircleCloseFilled />
           </el-icon>
         </template>
       </el-input>
@@ -108,11 +112,17 @@
       >
         <template #prefix>
           <el-icon
-            v-if="triggerIcon"
+            v-if="showOriginalPrefixIcon && triggerIcon"
             :class="[nsInput.e('icon'), nsRange.e('icon')]"
           >
             <component :is="triggerIcon" />
           </el-icon>
+          <img
+            v-else
+            :src="pickerVisible ? dateAfterIconActive : dateAfterIconDefault"
+            alt=""
+            class="date-after-icon"
+          />
         </template>
         <template #range-separator>
           <slot name="range-separator">
@@ -126,7 +136,7 @@
             @mousedown.prevent="NOOP"
             @click="onClearIconClick"
           >
-            <component :is="clearIcon" />
+            <CircleCloseFilled />
           </el-icon>
         </template>
       </picker-range-trigger>
@@ -185,7 +195,7 @@ import {
   EVENT_CODE,
   UPDATE_MODEL_EVENT,
 } from '@element-plus/constants'
-import { Calendar, Clock } from '@element-plus/icons-vue'
+import { Calendar, Clock, CircleCloseFilled } from '@element-plus/icons-vue'
 import { dayOrDaysToDate, formatter, parseDate, valueEquals } from '../utils'
 import {
   PICKER_BASE_INJECTION_KEY,
@@ -193,6 +203,8 @@ import {
 } from '../constants'
 import { timePickerDefaultProps } from './props'
 import PickerRangeTrigger from './picker-range-trigger.vue'
+import dateAfterIconActive from '../../../../theme-chalk/src/assets/date-after-icon-active.png'
+import dateAfterIconDefault from '../../../../theme-chalk/src/assets/date-after-icon-default.png'
 
 import type { InputInstance } from '@element-plus/components/input'
 import type { Dayjs } from 'dayjs'

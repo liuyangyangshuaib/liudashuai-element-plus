@@ -13,6 +13,7 @@
         }
         td.available:hover {
           color: getCssVar('datepicker-text-color');
+          border: 1px solid getCssVar('datepicker-text-color');
         }
         td:first-child .#{$namespace}-date-table-cell {
           margin-left: 5px;
@@ -89,7 +90,8 @@
     &.current:not(.disabled) {
       .#{$namespace}-date-table-cell__text {
         color: $color-white;
-        background-color: getCssVar('datepicker-active-color');
+        background-color: #E7E7E7;
+
       }
       &:focus-visible {
         .#{$namespace}-date-table-cell__text {
@@ -134,7 +136,7 @@
     }
 
     &.selected .#{$namespace}-date-table-cell__text {
-      background-color: getCssVar('datepicker-active-color');
+      background-color: #E7E7E7;
       color: $color-white;
       border-radius: 15px;
     }

@@ -141,7 +141,7 @@ const focus = () => {
   currentCellRef.value?.focus()
 }
 
-const getCellStyle = (cell: MonthCell) => {
+const getCellStyle = (cell: MonthCell) => {   
   const style = {} as any
   const year = props.date.year()
   const today = new Date()
@@ -157,7 +157,8 @@ const getCellStyle = (cell: MonthCell) => {
       (date) =>
         dayjs.isDayjs(date) && date.year() === year && date.month() === month
     ) >= 0
-  style.today = today.getFullYear() === year && today.getMonth() === month
+  // style.today = today.getFullYear() === year && today.getMonth() === month
+  style.today = false // 样式不需要
 
   if (cell.inRange) {
     style['in-range'] = true

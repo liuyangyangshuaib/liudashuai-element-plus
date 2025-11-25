@@ -19,7 +19,7 @@ $colors: map.deep-merge(
     'white': #ffffff,
     'black': #000000,
     'primary': (
-      'base': #409eff,
+      'base': #3169E9,
     ),
     'success': (
       'base': #67c23a,
@@ -112,7 +112,7 @@ $border-color: map.merge(
     '': #dcdfe6,
     'light': #e4e7ed,
     'lighter': #ebeef5,
-    'extra-light': #f2f6fc,
+    'extra-light': #E7E7E7,
     'dark': #d4d7de,
     'darker': #cdd0d6,
   ),

@@ -275,6 +275,7 @@ export const useBasicDateTable = (
   const handleMouseDown = (event: MouseEvent) => {
     const target = (event.target as HTMLElement).closest('td')
     if (!target) return
+    console.log('handleMouseDown', event);
     focusWithClick = true
   }
 
