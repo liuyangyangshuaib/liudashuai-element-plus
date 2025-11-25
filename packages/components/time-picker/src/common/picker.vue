@@ -63,11 +63,9 @@
           >
             <component :is="triggerIcon" />
           </el-icon>
-          <img
+          <span
             v-else
-            :src="pickerVisible ? dateAfterIconActive : dateAfterIconDefault"
-            alt=""
-            class="date-after-icon"
+            :class="['date-after-icon', { 'is-active': pickerVisible }]"
           />
         </template>
         <template #suffix>
@@ -117,11 +115,9 @@
           >
             <component :is="triggerIcon" />
           </el-icon>
-          <img
+          <span
             v-else
-            :src="pickerVisible ? dateAfterIconActive : dateAfterIconDefault"
-            alt=""
-            class="date-after-icon"
+            :class="['date-after-icon', { 'is-active': pickerVisible }]"
           />
         </template>
         <template #range-separator>
@@ -203,9 +199,6 @@ import {
 } from '../constants'
 import { timePickerDefaultProps } from './props'
 import PickerRangeTrigger from './picker-range-trigger.vue'
-import dateAfterIconActive from '../../../../theme-chalk/src/assets/date-after-icon-active.png'
-import dateAfterIconDefault from '../../../../theme-chalk/src/assets/date-after-icon-default.png'
-
 import type { InputInstance } from '@element-plus/components/input'
 import type { Dayjs } from 'dayjs'
 import type { ComponentPublicInstance, Ref } from 'vue'
