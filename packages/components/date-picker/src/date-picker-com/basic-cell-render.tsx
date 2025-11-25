@@ -12,7 +12,7 @@ export default defineComponent({
     const isHover = ref(false)
 
     return () => {
-      const { cell } = props
+      const { cell } = props as any
 
       return (
         <div
@@ -28,7 +28,10 @@ export default defineComponent({
               <span
                 class={ns.e('text')}
                 style={
-                  isHover.value ? 'border: 1px solid #3169E9' : undefined
+                  // 只有在还没有任何已选值时，第一次 hover 才使用这套背景/文字色
+                  !cell?.hasValue && isHover.value
+                    ? 'background: #F5F5F5;color: #0C0C0C'
+                    : undefined
                 }
               >
                 {cell?.renderText ?? cell?.text}

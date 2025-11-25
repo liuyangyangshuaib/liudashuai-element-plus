@@ -77,9 +77,10 @@
 
   .clear-icon {
     cursor: pointer;
+    color: #bababa;
 
     &:hover {
-      color: getCssVar('input-clear-hover-color');
+      color: #666666;
     }
   }
 

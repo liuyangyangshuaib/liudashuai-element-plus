@@ -21,14 +21,16 @@
 
     &.today {
       .#{$namespace}-date-table-cell__text {
-        color: getCssVar('color-primary');
-        font-weight: bold;
+        color: #3169E9;
+        border: 1px solid #3169E9;
+        box-sizing: border-box;
       }
 
       &.start-date .#{$namespace}-date-table-cell__text,
       &.end-date .#{$namespace}-date-table-cell__text {
         color: $color-white;
         background-color: #E7E7E7;
+        border: none;
       }
     }
 
