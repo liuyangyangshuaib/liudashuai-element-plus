@@ -103,6 +103,7 @@ const rows = computed<MonthCell[][]>(() => {
         (props.rangeState.selecting && props.minDate) ||
         null
 
+      // inRange 仍然使用临时的 calEndDate，从而在 hover 时预览整段范围
       cell.inRange =
         !!(
           props.minDate &&
@@ -117,12 +118,20 @@ const rows = computed<MonthCell[][]>(() => {
           calTime.isSameOrAfter(calEndDate, 'month')
         )
 
-      if (props.minDate?.isSameOrAfter(calEndDate)) {
-        cell.start = !!(calEndDate && calTime.isSame(calEndDate, 'month'))
-        cell.end = props.minDate && calTime.isSame(props.minDate, 'month')
+      // start/end 只在真正选完（有 maxDate）时标记 end，
+      // 选择过程中（只有 minDate + hover endDate）不显示 end 样式
+      const hasFinalRange = !!props.minDate && !!props.maxDate
+
+      if (hasFinalRange && props.minDate?.isSameOrAfter(props.maxDate)) {
+        cell.start = !!(props.maxDate && calTime.isSame(props.maxDate, 'month'))
+        cell.end = !!(props.minDate && calTime.isSame(props.minDate, 'month'))
       } else {
+        // 始终标记真实的起点月份
         cell.start = !!(props.minDate && calTime.isSame(props.minDate, 'month'))
-        cell.end = !!(calEndDate && calTime.isSame(calEndDate, 'month'))
+        // 只有完成选择（hasFinalRange）才标记终点月份
+        cell.end =
+          hasFinalRange &&
+          !!(props.maxDate && calTime.isSame(props.maxDate, 'month'))
       }
 
       const isToday = now.isSame(calTime)
@@ -141,7 +150,7 @@ const focus = () => {
   currentCellRef.value?.focus()
 }
 
-const getCellStyle = (cell: MonthCell) => {   
+const getCellStyle = (cell: MonthCell) => {
   const style = {} as any
   const year = props.date.year()
   const today = new Date()
@@ -160,16 +169,20 @@ const getCellStyle = (cell: MonthCell) => {
   // style.today = today.getFullYear() === year && today.getMonth() === month
   style.today = false // 样式不需要
 
-  if (cell.inRange) {
+  // 只在真正完成选择（同时存在 minDate 和 maxDate）后，
+  // 给起点 / 终点以及中间的 in-range 加样式
+  const hasFinalRange = !!props.minDate && !!props.maxDate
+
+  if (hasFinalRange && cell.inRange) {
     style['in-range'] = true
+  }
 
-    if (cell.start) {
-      style['start-date'] = true
-    }
+  if (cell.start) {
+    style['start-date'] = true
+  }
 
-    if (cell.end) {
-      style['end-date'] = true
-    }
+  if (hasFinalRange && cell.end) {
+    style['end-date'] = true
   }
   return style
 }
