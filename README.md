@@ -2,8 +2,9 @@
 
 更新日志
 
-- 1.1.2 dialog headerUI调整
-- 1.1.1 级联选择器下拉UI调整
+- 1.1.3 日期月份选择组件 UI 调整 select 组件 UI+交互调整
+- 1.1.2 dialog headerUI 调整
+- 1.1.1 级联选择器下拉 UI 调整
 - 1.1.0 select 定制化调整
 - 1.0.8 更改选择框 suffix
 - 1.0.7 修复全选无法触发 change 事件
@@ -41,6 +42,7 @@ const app = createApp(App)
 app.use(LiuDashuaiElementPlus)
 app.mount('#app')
 ```
+
 ## 许可证
 
 MIT License - 基于 Element Plus 的 MIT 许可证
