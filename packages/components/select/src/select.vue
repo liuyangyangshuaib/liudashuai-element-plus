@@ -153,7 +153,7 @@
             </div>
 
             <div
-              v-if="currentPlaceholder"
+              v-if="currentPlaceholder && !hasModelValue"
               :class="[
                 nsSelect.e('selected-item'),
                 nsSelect.e('placeholder'),
@@ -374,7 +374,7 @@ export default defineComponent({
     const API = useSelect(_props, emit)
     const { calculatorRef, inputStyle } = useCalcInputWidth()
 
-    const { states, updateOptions } = API
+    const { states } = API
 
     const clearSearch = () => {
       states.inputValue = ''
