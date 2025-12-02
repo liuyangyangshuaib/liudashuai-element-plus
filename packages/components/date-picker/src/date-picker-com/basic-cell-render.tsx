@@ -30,7 +30,7 @@ export default defineComponent({
                 style={
                   // 只有在还没有任何已选值时，第一次 hover 才使用这套背景/文字色
                   !cell?.hasValue && isHover.value
-                    ? 'background: #F5F5F5;color: #0C0C0C'
+                    ? 'background: #F5F5F5;color: #0C0C0C;border:none'
                     : undefined
                 }
               >
