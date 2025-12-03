@@ -62,7 +62,7 @@
   &:not(.is-disabled):hover {
     .#{$namespace}-input__wrapper {
       cursor: pointer;
-      box-shadow: 0 0 0 1px getCssVar('input', 'hover-border-color') inset;
+      box-shadow: 0 0 0 1px getCssVar('color-primary') inset;
     }
   }
 
