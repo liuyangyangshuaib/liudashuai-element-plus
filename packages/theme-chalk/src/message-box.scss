@@ -63,13 +63,8 @@
     padding-bottom: getCssVar('messagebox-padding-primary');
 
     &.show-close {
-      padding-right: calc(
-        getCssVar('messagebox-padding-primary') +
-          var(
-            #{getCssVarName('message-close-size')},
-            map.get($message, 'close-size')
-          )
-      );
+      padding-right: calc(getCssVar('messagebox-padding-primary') + var(#{getCssVarName('message-close-size')},
+          map.get($message, 'close-size')));
     }
   }
 
@@ -89,10 +84,8 @@
     border: none;
     outline: none;
     background: transparent;
-    font-size: var(
-      #{getCssVarName('message-close-size')},
-      map.get($message, 'close-size')
-    );
+    font-size: var(#{getCssVarName('message-close-size')},
+      map.get($message, 'close-size'));
     cursor: pointer;
 
     .#{$namespace}-message-box__close {
@@ -109,20 +102,24 @@
   }
 
   @include e(content) {
-    color: getCssVar('messagebox-content-color');
-    font-size: getCssVar('messagebox-content-font-size');
+    // color: getCssVar('messagebox-content-color');
+    // font-size: getCssVar('messagebox-content-font-size');
+    font-size: 16px;
+    color: #0C0C0C;
+    font-family: 'HarmonyOS Sans', sans-serif !important;
+    font-weight: 500;
   }
 
   @include e(container) {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
   }
 
   @include e(input) {
     padding-top: 12px;
 
-    & div.invalid > input {
+    & div.invalid>input {
       border-color: getCssVar('color-error');
 
       &:focus {

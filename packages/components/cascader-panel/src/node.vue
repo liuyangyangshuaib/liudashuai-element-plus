@@ -139,6 +139,9 @@ export default defineComponent({
         !multiple.value
       ) {
         handleCheck(true)
+      } else if (isLeaf.value && !isDisabled.value && multiple.value) {
+        // 当点击的节点没有子集（叶子节点）且是多选模式时，选中该节点
+        handleCheck(true)
       } else {
         handleExpand()
       }

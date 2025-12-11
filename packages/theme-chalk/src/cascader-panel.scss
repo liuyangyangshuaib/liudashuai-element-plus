@@ -136,6 +136,7 @@
       line-height: 34px;
       outline: none;
       box-sizing: border-box;
+
     }
 
     // 隐藏虚拟列表的滚动条，使用外部的 el-scrollbar
@@ -182,6 +183,7 @@
         color: getCssVar('text-color-primary');
 
         &:hover {
+          // background:  getCssVar('fill-color-light');
           background: getCssVar('fill-color-light');
         }
       }
@@ -220,6 +222,8 @@
   height: 34px;
   line-height: 34px;
   outline: none;
+  border-radius: 4px;
+  margin: 4px;
 
   &.is-selectable.in-active-path {
     color: getCssVar('cascader-menu', 'text-color');
@@ -230,6 +234,7 @@
   &.is-active {
     color: getCssVar('cascader-menu', 'selected-text-color');
     font-weight: bold;
+    background-color: #E7E7E7;
   }
 
   &:not(.is-disabled) {
@@ -237,7 +242,9 @@
 
     &:hover,
     &:focus {
-      background: getCssVar('cascader-node', 'background-hover');
+      // background: getCssVar('cascader-node', 'background-hover');
+      background: #F5F5F5;
+
     }
   }
 

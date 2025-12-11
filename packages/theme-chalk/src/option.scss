@@ -40,8 +40,10 @@ $checked-icon: "data:image/svg+xml;utf8,%3Csvg class='icon' width='200' height='
     cursor: pointer;
     font-weight: 400;
     border-radius: 4px 4px 4px 4px;
+    margin-bottom: 4px;
+
     @include when(hovering) {
-      background-color:  #E7E8EC;
+      background-color: #E7E8EC;
       font-weight: 500;
     }
 
@@ -59,15 +61,16 @@ $checked-icon: "data:image/svg+xml;utf8,%3Csvg class='icon' width='200' height='
 
   @include when(multiple) {
     .#{$namespace}-select-dropdown__item.is-selected {
-      &::after {
-        @include checked-icon;
-      }
+      // 移除选中状态的勾勾图标
+      // &::after {
+      //   @include checked-icon;
+      // }
     }
 
     .#{$namespace}-select-dropdown__item.is-disabled {
-      &::after {
-        background-color: map.get($select-option, 'disabled-color');
-      }
+      // &::after {
+      //   background-color: map.get($select-option, 'disabled-color');
+      // }
     }
   }
 }

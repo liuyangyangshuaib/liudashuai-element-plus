@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'HarmonyOS Sans';
+  font-style: normal;
+  font-weight: 100;
+  src: url('./fonts/HarmonyOS Sans/HarmonyOS_Sans_Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HarmonyOS Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('./fonts/HarmonyOS Sans/HarmonyOS_Sans_Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HarmonyOS Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/HarmonyOS Sans/HarmonyOS_Sans_Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HarmonyOS Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('./fonts/HarmonyOS Sans/HarmonyOS_Sans_Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HarmonyOS Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('./fonts/HarmonyOS Sans/HarmonyOS_Sans_Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'HarmonyOS Sans';
+  font-style: normal;
+  font-weight: 900;
+  src: url('./fonts/HarmonyOS Sans/HarmonyOS_Sans_Black.ttf') format('truetype');
+}
+
+// 全局字体变量
+:root {
+  --el-font-family: 'HarmonyOS Sans', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+}

@@ -184,6 +184,7 @@ import { Loading } from '@element-plus/icons-vue'
 import ElFocusTrap from '@element-plus/components/focus-trap'
 import { useGlobalComponentSettings } from '@element-plus/components/config-provider'
 
+import { h } from 'vue'
 import type { ComponentPublicInstance, PropType } from 'vue'
 import type { ComponentSize } from '@element-plus/constants'
 import type {
@@ -191,7 +192,7 @@ import type {
   MessageBoxState,
   MessageBoxType,
 } from './message-box.type'
-
+import errorImg from '@element-plus/theme-chalk/src/assets/error-icon.png'
 export default defineComponent({
   name: 'ElMessageBox',
   directives: {
@@ -322,7 +323,17 @@ export default defineComponent({
 
     const iconComponent = computed(() => {
       const type = state.type
-      return state.icon || (type && TypeComponentsMap[type]) || ''
+      if (state.icon) return state.icon
+      if (type === 'error') {
+        return {
+          render: () =>
+            h('img', {
+              src: errorImg,
+              style: { width: '24px', height: '24px' },
+            }),
+        }
+      }
+      return type && TypeComponentsMap[type]
     })
     const hasMessage = computed(() => !!state.message)
     const rootRef = ref<HTMLElement>()
