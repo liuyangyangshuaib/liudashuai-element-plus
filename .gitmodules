@@ -1,0 +1,3 @@
+[submodule "client"]
+	path = client
+	url = https://gitlab.mansenwenhua77.com:8989/MS-front/mansen_ai_management

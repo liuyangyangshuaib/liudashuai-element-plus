@@ -1,0 +1,881 @@
+[
+  {
+    "id": 148,
+    "pid": 0,
+    "name": "aiCreate",
+    "component": "/create-image",
+    "path": "layout/routerView/parent",
+    "meta": {
+      "icon": "",
+      "title": "AI生成",
+      "isLink": "",
+      "isHide": false,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 84,
+        "pid": 148,
+        "name": "SystemCreateImageIndex",
+        "component": "/system/create/image/index",
+        "path": "/create-image",
+        "meta": {
+          "icon": "ai-tupian",
+          "title": "图片生成",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 86,
+        "pid": 148,
+        "name": "SystemCreateVideoIndex",
+        "component": "/system/create/video/index",
+        "path": "/create-video",
+        "meta": {
+          "icon": "ai-shipin",
+          "title": "视频生成",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 119,
+        "pid": 148,
+        "name": "CreateDigital",
+        "component": "/system/create/digital/index",
+        "path": "/create-digital",
+        "meta": {
+          "icon": "ai-shuziren",
+          "title": "数字人",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 201,
+        "pid": 148,
+        "name": "",
+        "component": "/system/create/lipSyncing/index",
+        "path": "/create-lipSyncing",
+        "meta": {
+          "icon": "ai-kouxing",
+          "title": "对口型",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 202,
+        "pid": 148,
+        "name": "WorkflowProject",
+        "component": "/workflow/project/index",
+        "path": "/project",
+        "meta": {
+          "icon": "ai-huabu",
+          "title": "无限画布",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 216,
+        "pid": 148,
+        "name": "Detail",
+        "component": "/system/create/detail",
+        "path": "/create-detail",
+        "meta": {
+          "icon": "",
+          "title": "详情",
+          "isLink": "",
+          "isHide": true,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 232,
+        "pid": 148,
+        "name": "SystemCreateWorkbenchIndex",
+        "component": "/system/create/workbench/index",
+        "path": "/create-workbench",
+        "meta": {
+          "icon": "ai-gongzuotai",
+          "title": "项目工作台",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 233,
+        "pid": 148,
+        "name": "SystemCreateFragmentIndex",
+        "component": "/system/create/fragment/index",
+        "path": "/create-fragment",
+        "meta": {
+          "icon": "",
+          "title": "片段管理",
+          "isLink": "",
+          "isHide": true,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 145,
+    "pid": 0,
+    "name": "",
+    "component": "layout/routerView/parent",
+    "path": "工具",
+    "meta": {
+      "icon": "",
+      "title": "工具",
+      "isLink": "",
+      "isHide": false,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 146,
+        "pid": 145,
+        "name": "CreateToolImage",
+        "component": "/system/create/tool/index",
+        "path": "/create-tool-image",
+        "meta": {
+          "icon": "ai-jiexi",
+          "title": "图片解析",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 147,
+        "pid": 145,
+        "name": "CreateToolText",
+        "component": "/system/create/tool/index",
+        "path": "/create-tool-text",
+        "meta": {
+          "icon": "ai-qiehuan",
+          "title": "镜头语言转换",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 231,
+        "pid": 145,
+        "name": "SystemCreatePreviousVideoIndex",
+        "component": "/system/create/previousVideo/index",
+        "path": "/create-previous-video",
+        "meta": {
+          "icon": "ai-qiantie",
+          "title": "前贴视频",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 246,
+        "pid": 145,
+        "name": "CreateToolVideoPost",
+        "component": "/system/create/tool/index",
+        "path": "/create-tool-video-post",
+        "meta": {
+          "icon": "ai-houqi",
+          "title": "视频后期处理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 247,
+        "pid": 145,
+        "name": "CreateAiDub",
+        "component": "/system/create/aiDub/index",
+        "path": "/create-ai-dub",
+        "meta": {
+          "icon": "ai-peiyin",
+          "title": "AI配音",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "pid": 0,
+    "name": "layoutRouterViewParent",
+    "component": "/assets",
+    "path": "/assets",
+    "meta": {
+      "icon": "",
+      "title": "资产",
+      "isLink": "",
+      "isHide": false,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 88,
+        "pid": 87,
+        "name": "MyWorks",
+        "component": "/system/create/mySelf/index.vue",
+        "path": "/my-works",
+        "meta": {
+          "icon": "ai-zuopin",
+          "title": "我的作品",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 144,
+        "pid": 87,
+        "name": "MySubject",
+        "component": "/system/create/subject/index",
+        "path": "/system/create/subject/index",
+        "meta": {
+          "icon": "ai-zhuti",
+          "title": "主体库",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 151,
+        "pid": 87,
+        "name": "SystemCreateRecordIndex",
+        "component": "/system/create/record/index",
+        "path": "/system/create/record/index",
+        "meta": {
+          "icon": "ai-senbei",
+          "title": "森贝记录",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 248,
+        "pid": 87,
+        "name": "CreateSoundLibrary",
+        "component": "/system/create/soundLibrary/index",
+        "path": "/create-soundLibrary",
+        "meta": {
+          "icon": "ai-yinse",
+          "title": "音色库",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "pid": 0,
+    "name": "apiV1SystemDict",
+    "component": "layout/routerView/parent",
+    "path": "/system/dict",
+    "meta": {
+      "icon": "iconfont icon-shuxingtu",
+      "title": "系统配置",
+      "isLink": "",
+      "isHide": true,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 28,
+        "pid": 27,
+        "name": "apiV1SystemDictTypeList",
+        "component": "system/dict/index",
+        "path": "/system/dict/type/list",
+        "meta": {
+          "icon": "iconfont icon--chaifenhang",
+          "title": "字典管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 29,
+        "pid": 27,
+        "name": "apiV1SystemDictDataList",
+        "component": "system/dict/dataList",
+        "path": "/system/dict/data/list/:dictType",
+        "meta": {
+          "icon": "iconfont icon-putong",
+          "title": "字典数据管理",
+          "isLink": "",
+          "isHide": true,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 30,
+        "pid": 27,
+        "name": "apiV1SystemConfigList",
+        "component": "system/config/index",
+        "path": "/system/config/list",
+        "meta": {
+          "icon": "ele-Cherry",
+          "title": "参数管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "pid": 0,
+    "name": "apiV1SystemAuth",
+    "component": "layout/routerView/parent",
+    "path": "/system/auth",
+    "meta": {
+      "icon": "ele-Stamp",
+      "title": "权限管理",
+      "isLink": "",
+      "isHide": false,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 2,
+        "pid": 1,
+        "name": "apiV1SystemAuthMenuList",
+        "component": "system/menu/index",
+        "path": "/system/auth/menuList",
+        "meta": {
+          "icon": "ai-caidan",
+          "title": "菜单管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 10,
+        "pid": 1,
+        "name": "apiV1SystemRoleList",
+        "component": "system/role/index",
+        "path": "/system/auth/roleList",
+        "meta": {
+          "icon": "ai-juese",
+          "title": "角色管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 15,
+        "pid": 1,
+        "name": "apiV1SystemDeptList",
+        "component": "system/dept/index",
+        "path": "/system/auth/deptList",
+        "meta": {
+          "icon": "ai-bumen",
+          "title": "部门管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 22,
+        "pid": 1,
+        "name": "apiV1SystemPostList",
+        "component": "system/post/index",
+        "path": "/system/auth/postList",
+        "meta": {
+          "icon": "iconfont icon-neiqianshujuchucun",
+          "title": "岗位管理",
+          "isLink": "",
+          "isHide": true,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 26,
+        "pid": 1,
+        "name": "apiV1SystemUserList",
+        "component": "system/user/index",
+        "path": "/system/auth/user/list",
+        "meta": {
+          "icon": "ai-yonghu",
+          "title": "用户管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "pid": 0,
+    "name": "apiV1SystemMonitor",
+    "component": "layout/routerView/parent",
+    "path": "/system/monitor",
+    "meta": {
+      "icon": "iconfont icon-xuanzeqi",
+      "title": "系统监控",
+      "isLink": "",
+      "isHide": false,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 32,
+        "pid": 31,
+        "name": "apiV1SystemMonitorServer",
+        "component": "system/monitor/server/index",
+        "path": "/system/monitor/server",
+        "meta": {
+          "icon": "iconfont icon-shuju",
+          "title": "服务监控",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 34,
+        "pid": 31,
+        "name": "apiV1SystemLoginLogList",
+        "component": "system/monitor/loginLog/index",
+        "path": "/system/monitor/loginLog",
+        "meta": {
+          "icon": "ele-Finished",
+          "title": "登录日志",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 38,
+        "pid": 31,
+        "name": "apiV1SystemOperLogList",
+        "component": "system/monitor/operLog/index",
+        "path": "/system/monitor/operLog",
+        "meta": {
+          "icon": "iconfont icon-bolangnengshiyanchang",
+          "title": "操作日志",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 39,
+        "pid": 31,
+        "name": "apiV1SystemOnlineList",
+        "component": "system/monitor/userOnline/index",
+        "path": "/system/monitor/userOnlie",
+        "meta": {
+          "icon": "iconfont icon-skin",
+          "title": "在线用户",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "pid": 0,
+    "name": "apiV1SystemTools",
+    "component": "layout/routerView/parent",
+    "path": "/system/tools",
+    "meta": {
+      "icon": "iconfont icon-zujian",
+      "title": "系统工具",
+      "isLink": "",
+      "isHide": true,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 33,
+        "pid": 35,
+        "name": "apiSwagger",
+        "component": "layout/routerView/iframes",
+        "path": "/system/swagger",
+        "meta": {
+          "icon": "iconfont icon--chaifenlie",
+          "title": "api文档",
+          "isLink": "http://localhost:8808/swagger",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": true
+        },
+        "children": []
+      },
+      {
+        "id": 36,
+        "pid": 35,
+        "name": "apiV1SystemToolsGenTableList",
+        "component": "system/tools/gen/index",
+        "path": "/system/tools/gen",
+        "meta": {
+          "icon": "iconfont icon-step",
+          "title": "代码生成",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": [
+          {
+            "id": 37,
+            "pid": 36,
+            "name": "apiV1SystemToolsGenColumnList",
+            "component": "system/tools/gen/component/edit",
+            "path": "/system/tools/gen/edit",
+            "meta": {
+              "icon": "ele-Edit",
+              "title": "代码生成配置",
+              "isLink": "",
+              "isHide": true,
+              "isKeepAlive": true,
+              "isAffix": false,
+              "isIframe": false
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": 53,
+        "pid": 35,
+        "name": "apiV1SystemSysJobList",
+        "component": "system/sysJob/list/index",
+        "path": "/system/sysJob/list",
+        "meta": {
+          "icon": "fa fa-superpowers",
+          "title": "定时任务",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 223,
+        "pid": 35,
+        "name": "personal",
+        "component": "/system/personal/index",
+        "path": "/personal",
+        "meta": {
+          "icon": "ai-yonghu",
+          "title": "个人中心",
+          "isLink": "",
+          "isHide": true,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "pid": 0,
+    "name": "outLink",
+    "component": "layout/routerView/parent",
+    "path": "/demo/outLink",
+    "meta": {
+      "icon": "iconfont icon-zhongduancanshu",
+      "title": "外链测试",
+      "isLink": "",
+      "isHide": true,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 16,
+        "pid": 17,
+        "name": "aliyun",
+        "component": "layout/routerView/iframes",
+        "path": "/demo/outLink/aliyun",
+        "meta": {
+          "icon": "iconfont icon-diannao1",
+          "title": "阿里云-iframe",
+          "isLink": "https://www.aliyun.com/daily-act/ecs/activity_selection?spm=5176.8789780.J_3965641470.5.568845b58KHj51",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": true
+        },
+        "children": []
+      },
+      {
+        "id": 18,
+        "pid": 17,
+        "name": "tenyun",
+        "component": "layout/routerView/link",
+        "path": "/demo/outLink/tenyun",
+        "meta": {
+          "icon": "iconfont icon-shouye_dongtaihui",
+          "title": "腾讯云-外链",
+          "isLink": "https://cloud.tencent.com/act/new?cps_key=20b1c3842f74986b2894e2c5fcde7ea2&fromSource=gwzcw.3775555.3775555.3775555&utm_id=gwzcw.3775555.3775555.3775555&utm_medium=cpc",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "pid": 0,
+    "name": "apiV1SystemSysNotice",
+    "component": "layout/routerView/parent",
+    "path": "/system/sysNotice",
+    "meta": {
+      "icon": "iconfont icon-fuwenbenkuang",
+      "title": "通知公告",
+      "isLink": "",
+      "isHide": true,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 60,
+        "pid": 59,
+        "name": "apiV1SystemSysNoticeList",
+        "component": "system/sysNotice/list/index",
+        "path": "/system/sysNotice/list",
+        "meta": {
+          "icon": "ele-Fold",
+          "title": "通知公告管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      },
+      {
+        "id": 65,
+        "pid": 59,
+        "name": "apiV1SystemSysNoticeShow",
+        "component": "system/sysNotice/show/index",
+        "path": "/system/sysNotice/show",
+        "meta": {
+          "icon": "iconfont icon-tongzhi",
+          "title": "通知公告扎展示",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 149,
+    "pid": 0,
+    "name": "",
+    "component": "系统管理",
+    "path": "系统管理",
+    "meta": {
+      "icon": "",
+      "title": "系统管理",
+      "isLink": "",
+      "isHide": false,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 150,
+        "pid": 149,
+        "name": "SystemManageModelIndex",
+        "component": "/system/manage/model/index",
+        "path": "/system/manage/model/index",
+        "meta": {
+          "icon": "ai-moxing",
+          "title": "模型管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 243,
+    "pid": 0,
+    "name": "",
+    "component": "团队管理父菜单",
+    "path": "团队管理父菜单",
+    "meta": {
+      "icon": "",
+      "title": "团队管理父菜单",
+      "isLink": "",
+      "isHide": true,
+      "isKeepAlive": true,
+      "isAffix": false,
+      "isIframe": false
+    },
+    "children": [
+      {
+        "id": 244,
+        "pid": 243,
+        "name": "apiV1SystemTeamUserList",
+        "component": "/system/team/index.vue",
+        "path": "/system/team",
+        "meta": {
+          "icon": "",
+          "title": "团队管理",
+          "isLink": "",
+          "isHide": false,
+          "isKeepAlive": true,
+          "isAffix": false,
+          "isIframe": false
+        },
+        "children": []
+      }
+    ]
+  }
+]
