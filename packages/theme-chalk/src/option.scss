@@ -61,10 +61,11 @@ $checked-icon: "data:image/svg+xml;utf8,%3Csvg class='icon' width='200' height='
 
   @include when(multiple) {
     .#{$namespace}-select-dropdown__item.is-selected {
+
       // 移除选中状态的勾勾图标
-      // &::after {
-      //   @include checked-icon;
-      // }
+      &::after {
+        @include checked-icon;
+      }
     }
 
     .#{$namespace}-select-dropdown__item.is-disabled {
